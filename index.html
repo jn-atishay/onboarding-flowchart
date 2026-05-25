@@ -1055,7 +1055,7 @@
       <div class="mode-buttons">
         <button class="mode-btn primary" id="edit-toggle">Edit mode</button>
         <button class="mode-btn" id="export-btn">Download HTML</button>
-        <button class="mode-btn success" id="push-btn" disabled="">Pushing…</button>
+        <button class="mode-btn success" id="push-btn">Push to GitHub</button>
         <button class="mode-btn danger" id="reset-btn">Reset</button>
       </div>
     </nav>
@@ -2738,8 +2738,6 @@
 
       const btn = document.getElementById('push-btn');
       const orig = btn.textContent;
-      btn.textContent = 'Pushing…';
-      btn.disabled = true;
 
       const fail = (msg) => {
         alert('Push failed: ' + msg);
@@ -2755,16 +2753,31 @@
       };
 
       try {
-        // Build clean HTML (mirrors Download HTML)
+        // Build clean HTML (mirrors Download HTML) — do this BEFORE
+        // changing button state so the snapshot doesn't capture "Pushing…".
         const cloneDoc = document.documentElement.cloneNode(true);
         cloneDoc.querySelectorAll('.drag-handle, .link-editor').forEach(el => el.remove());
         cloneDoc.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
         cloneDoc.querySelectorAll('[spellcheck]').forEach(el => el.removeAttribute('spellcheck'));
+        // Strip browser-extension attributes (Grammarly, etc.) injected into the DOM
+        cloneDoc.querySelectorAll('*').forEach(el => {
+          Array.from(el.attributes).forEach(a => {
+            if (a.name.startsWith('data-gr-') || a.name.startsWith('data-new-gr-')) {
+              el.removeAttribute(a.name);
+            }
+          });
+        });
         const body = cloneDoc.querySelector('body');
-        if (body) body.classList.remove('edit-mode');
+        if (body) {
+          body.classList.remove('edit-mode');
+          if (body.getAttribute('class') === '') body.removeAttribute('class');
+        }
         const sv = cloneDoc.querySelector('#lines');
         if (sv) sv.innerHTML = '';
         const html = '<!DOCTYPE html>\n' + cloneDoc.outerHTML;
+
+        btn.textContent = 'Pushing…';
+        btn.disabled = true;
 
         // UTF-8 → base64 (chunked, to handle non-ASCII safely)
         const utf8 = new TextEncoder().encode(html);
