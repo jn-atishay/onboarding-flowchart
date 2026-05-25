@@ -2,6 +2,7 @@
 <html lang="en"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="code-version" content="v2-sticky-header">
   <title>Direct onboarding — problems &amp; solutions flowchart</title>
   <style>
     :root {
@@ -807,9 +808,14 @@
       display: flex;
       gap: 4px;
       border-bottom: 1px solid var(--border);
-      margin-bottom: 28px;
+      margin: 0 -32px 28px;
+      padding: 12px 32px 0;
       flex-wrap: wrap;
       align-items: center;
+      position: sticky;
+      top: 0;
+      background: var(--bg);
+      z-index: 50;
     }
     .tabs .mode-buttons {
       margin-left: auto;
@@ -2798,7 +2804,7 @@
         }
         const b64 = btoa(binary);
 
-        // Get current file SHA
+        // Get current file SHA + content (to compare code versions)
         const getRes = await fetch(
           `https://api.github.com/repos/${REPO}/contents/${FILE_PATH}?ref=${BRANCH}`,
           { headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json' } }
@@ -2808,6 +2814,31 @@
           return fail(`could not read current file (HTTP ${getRes.status})`);
         }
         const cur = await getRes.json();
+
+        // Stale-page check: refuse to push if this browser is on an older code version
+        // than what's currently live. (Stops accidentally clobbering newer code edits.)
+        try {
+          const liveBytes = Uint8Array.from(atob((cur.content || '').replace(/\s/g, '')), c => c.charCodeAt(0));
+          const liveHtml = new TextDecoder().decode(liveBytes);
+          const liveMatch = liveHtml.match(/<meta\s+name=["']code-version["']\s+content=["']([^"']*)["']/);
+          const liveVer = liveMatch ? liveMatch[1] : '';
+          const pageVerEl = document.querySelector('meta[name="code-version"]');
+          const pageVer = pageVerEl ? pageVerEl.getAttribute('content') : '';
+          if (liveVer && pageVer && liveVer !== pageVer) {
+            alert(
+              'Push blocked — your page is out of date.\n\n' +
+              'Live code-version: ' + liveVer + '\n' +
+              'Your browser:      ' + pageVer + '\n\n' +
+              'Hard-refresh (Cmd+Shift+R) to load the latest, then re-do your edits and push again. ' +
+              'Pushing without refreshing would overwrite newer code changes.'
+            );
+            btn.textContent = orig;
+            btn.disabled = false;
+            return;
+          }
+        } catch (e) {
+          console.warn('Stale-page check skipped:', e);
+        }
 
         // PUT new content
         const ts = new Date().toLocaleString();
