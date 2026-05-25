@@ -807,9 +807,14 @@
       display: flex;
       gap: 4px;
       border-bottom: 1px solid var(--border);
-      margin-bottom: 28px;
+      margin: 0 -32px 28px;
+      padding: 12px 32px 0;
       flex-wrap: wrap;
       align-items: center;
+      position: sticky;
+      top: 0;
+      background: var(--bg);
+      z-index: 50;
     }
     .tabs .mode-buttons {
       margin-left: auto;
