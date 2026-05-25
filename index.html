@@ -230,6 +230,71 @@
     .node.dim { opacity: 0.28; }
     .node.hidden { display: none; }
 
+    /* Info tooltip (used on stage activation rates) */
+    .info-tip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--ink-faint);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      font-style: normal;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      margin-left: 6px;
+      cursor: help;
+      position: relative;
+      vertical-align: middle;
+      user-select: none;
+      line-height: 1;
+    }
+    .info-tip:hover { background: var(--ink); }
+    .info-tip::after {
+      content: attr(data-tip);
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--ink);
+      color: #fff;
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      white-space: normal;
+      width: 240px;
+      line-height: 1.4;
+      text-align: left;
+      z-index: 100;
+      pointer-events: none;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.12s ease;
+    }
+    .info-tip::before {
+      content: '';
+      position: absolute;
+      bottom: calc(100% + 2px);
+      left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-top-color: var(--ink);
+      z-index: 100;
+      pointer-events: none;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.12s ease;
+    }
+    .info-tip:hover::after,
+    .info-tip:hover::before {
+      opacity: 1;
+      visibility: visible;
+    }
+
     .node .top {
       display: flex;
       justify-content: space-between;
@@ -1014,7 +1079,7 @@
 
         <div class="node stage" data-type="stage" data-id="signup">
           <div class="top">
-            <div class="name">Post sign-up&nbsp;<div>(42% Activation Rate)</div></div>
+            <div class="name">Post sign-up&nbsp;<div>(42% Activation Rate)<span class="info-tip" contenteditable="false" data-tip="This is the % of people who dropped off at this stage in Direct OB and eventually received their first payment.">i</span></div></div>
             <div class="badge">28 stuck</div>
           </div>
           <div class="code">SIGN_UP_SUCCESS</div>
@@ -1027,7 +1092,7 @@
         <div class="node stage in-scope" data-type="stage" data-id="business">
           <div class="scope-pill"><span class="dot"></span> Priority : High</div>
           <div class="top">
-            <div class="name">Business details form&nbsp;<div>(51% Activation Rate)</div></div>
+            <div class="name">Business details form&nbsp;<div>(51% Activation Rate)<span class="info-tip" contenteditable="false" data-tip="This is the % of people who dropped off at this stage in Direct OB and eventually received their first payment.">i</span></div></div>
             <div class="badge">74 stuck</div>
           </div>
           <div class="code">COMPANY_PAN_DETAILS</div>
@@ -1039,7 +1104,7 @@
 
         <div class="node stage" data-type="stage" data-id="aadhaar">
           <div class="top">
-            <div class="name">Aadhaar / DigiLocker<div>(48% Activation Rate)</div></div>
+            <div class="name">Aadhaar / DigiLocker<div>(48% Activation Rate)<span class="info-tip" contenteditable="false" data-tip="This is the % of people who dropped off at this stage in Direct OB and eventually received their first payment.">i</span></div></div>
             <div class="badge">23 stuck</div>
           </div>
           <div class="code">UBO_PAN_DETAILS</div>
@@ -1052,7 +1117,7 @@
         <div class="node stage in-scope" data-type="stage" data-id="docupload">
           <div class="scope-pill"><span class="dot"></span> Priority : High</div>
           <div class="top">
-            <div class="name">Document upload / bank statement<div>(52% Activation Rate)</div></div>
+            <div class="name">Document upload / bank statement<div>(52% Activation Rate)<span class="info-tip" contenteditable="false" data-tip="This is the % of people who dropped off at this stage in Direct OB and eventually received their first payment.">i</span></div></div>
             <div class="badge">120 stuck</div>
           </div>
           <div class="code">COMPANY_BANK_ACCOUNT_DETAILS</div>
