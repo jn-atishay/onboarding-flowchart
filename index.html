@@ -1,0 +1,2575 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Direct onboarding — problems &amp; solutions flowchart</title>
+  <style>
+    :root {
+      --bg: #f6f5ef;
+      --surface: #ffffff;
+      --surface-soft: #faf9f3;
+      --ink: #161616;
+      --ink-soft: #4a4a4a;
+      --ink-faint: #8b8b85;
+      --border: #e6e3d7;
+      --border-strong: #d3cfbf;
+      --red: #b91c1c; --red-bg: #fde8e8;
+      --amber: #c2410c; --amber-bg: #fff1e6;
+      --green: #15803d; --green-bg: #ecfdf3;
+      --accent: #0f6c4c; --accent-bg: #e8f6ef;
+      --grey: #8b8b85; --grey-bg: #eeeeee;
+      --stage: #1e3a8a; --stage-bg: #e0e7ff;
+      --problem: #7c2d12; --problem-bg: #fef3c7;
+      --shadow-sm: 0 1px 2px rgba(20, 20, 20, 0.04);
+      --shadow: 0 6px 22px rgba(20, 20, 20, 0.06);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+    }
+    .container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 40px 32px 80px;
+    }
+    .eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 12px;
+    }
+    h1 {
+      font-size: 32px;
+      line-height: 1.1;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      margin-bottom: 8px;
+    }
+    .lede {
+      font-size: 15px;
+      color: var(--ink-soft);
+      max-width: 760px;
+      margin-bottom: 28px;
+    }
+
+    /* ===== Top control bar ===== */
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 22px;
+      margin-bottom: 28px;
+      box-shadow: var(--shadow-sm);
+      flex-wrap: wrap;
+    }
+    .filters {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .filters .label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-right: 4px;
+    }
+    .chip {
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      padding: 7px 14px;
+      border-radius: 100px;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ink-soft);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .chip:hover { background: var(--surface-soft); }
+    .chip.active {
+      background: var(--ink);
+      color: white;
+      border-color: var(--ink);
+    }
+    .chip.p0.active { background: var(--red); border-color: var(--red); }
+    .chip.p1.active { background: var(--amber); border-color: var(--amber); }
+    .chip.p2.active { background: var(--accent); border-color: var(--accent); }
+    .chip.p3.active { background: var(--grey); border-color: var(--grey); }
+
+    .aggregate {
+      display: flex;
+      gap: 28px;
+      align-items: baseline;
+    }
+    .agg-item .lab {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+    }
+    .agg-item .val {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      font-variant-numeric: tabular-nums;
+    }
+    .agg-item.lift .val { color: var(--accent); }
+
+    /* Auto-computed summary line — quieter than the main aggregate */
+    .aggregate-auto {
+      flex-basis: 100%;
+      font-size: 11px;
+      color: var(--ink-faint);
+      font-variant-numeric: tabular-nums;
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px dashed var(--border);
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: baseline;
+    }
+    .aggregate-auto .ac-label {
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-size: 10px;
+    }
+    .aggregate-auto b {
+      color: var(--ink);
+      font-weight: 700;
+    }
+    .aggregate-auto .ac-lift b {
+      color: var(--accent);
+    }
+
+    /* ===== Flow layout ===== */
+    .flow {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 1.2fr 1.3fr;
+      gap: 80px;
+    }
+    .col-header {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 14px;
+      padding-left: 4px;
+    }
+    .col {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* SVG connectors */
+    .lines {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .lines path {
+      fill: none;
+      stroke: var(--border-strong);
+      stroke-width: 1.5;
+      opacity: 0.55;
+      transition: stroke 0.2s ease, opacity 0.2s ease, stroke-width 0.2s ease;
+    }
+    .lines path.active {
+      stroke: var(--accent);
+      stroke-width: 2.5;
+      opacity: 1;
+    }
+    .lines path.dim {
+      opacity: 0.08;
+    }
+
+    /* ===== Nodes ===== */
+    .node {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, opacity 0.2s ease, transform 0.15s ease;
+      box-shadow: var(--shadow-sm);
+    }
+    .node:hover {
+      border-color: var(--border-strong);
+      box-shadow: var(--shadow);
+      transform: translateY(-1px);
+    }
+    .node.active {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(15, 108, 76, 0.12), var(--shadow);
+    }
+    .node.dim { opacity: 0.28; }
+    .node.hidden { display: none; }
+
+    .node .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+    .node .name {
+      font-size: 14.5px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      line-height: 1.25;
+      flex: 1;
+    }
+    .node .badge {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 9px;
+      border-radius: 100px;
+      letter-spacing: 0.02em;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+    .node .detail {
+      font-size: 12.5px;
+      color: var(--ink-soft);
+      line-height: 1.45;
+      margin: 4px 0 8px;
+    }
+    .node .stat {
+      font-size: 11px;
+      color: var(--ink-faint);
+      font-variant-numeric: tabular-nums;
+      padding-top: 8px;
+      border-top: 1px dashed var(--border);
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .node .stat .pri {
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+
+    /* Stage node specifics */
+    .node.stage {
+      border-left: 4px solid var(--stage);
+    }
+    .node.stage .badge {
+      background: var(--stage-bg);
+      color: var(--stage);
+    }
+    .node.stage .code {
+      font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      font-size: 10px;
+      color: var(--ink-faint);
+      margin-top: 2px;
+    }
+    /* Stages we're actively working on */
+    .node.stage.in-scope {
+      border-left: 5px solid var(--accent);
+      background:
+        linear-gradient(to right, rgba(15, 108, 76, 0.06) 0, var(--surface) 38%);
+      box-shadow: 0 0 0 2px rgba(15, 108, 76, 0.12), var(--shadow);
+    }
+    .node.stage.in-scope:hover {
+      box-shadow: 0 0 0 2px rgba(15, 108, 76, 0.18), var(--shadow);
+    }
+    .node.stage.in-scope .badge {
+      background: var(--accent-bg);
+      color: var(--accent);
+    }
+    .node.stage.in-scope .name {
+      color: var(--ink);
+    }
+    .scope-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      background: var(--accent);
+      color: white;
+      padding: 3px 10px;
+      border-radius: 100px;
+      margin-bottom: 10px;
+    }
+    .scope-pill .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 100px;
+      background: white;
+      display: inline-block;
+    }
+    /* Prominent % of stuck */
+    .pct-big {
+      font-weight: 800;
+      font-size: 17px;
+      color: var(--stage);
+      letter-spacing: -0.01em;
+      font-variant-numeric: tabular-nums;
+      display: inline-block;
+      margin-right: 4px;
+      line-height: 1;
+    }
+    .node.stage.in-scope .pct-big {
+      font-size: 34px;
+      color: var(--accent);
+      letter-spacing: -0.03em;
+      display: block;
+      margin: 2px 0 4px;
+    }
+    .node.stage.in-scope .stat {
+      padding-top: 12px;
+    }
+    .node.stage.in-scope .stat > span:first-child {
+      font-size: 12px;
+      color: var(--ink-soft);
+      font-weight: 600;
+    }
+    .node.stage.in-scope .stat .biggest-tag {
+      display: inline-block;
+      font-size: 10.5px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: var(--red-bg);
+      color: var(--red);
+      padding: 2px 8px;
+      border-radius: 100px;
+      margin-left: 4px;
+    }
+
+    /* Problem node specifics */
+    .node.problem {
+      border-left: 4px solid var(--problem);
+    }
+    .node.problem .badge {
+      background: var(--problem-bg);
+      color: var(--problem);
+    }
+
+    /* Solution node specifics */
+    .node.solution.P0 { border-left: 4px solid var(--red); }
+    .node.solution.P1 { border-left: 4px solid var(--amber); }
+    .node.solution.P2 { border-left: 4px solid var(--accent); }
+    .node.solution.P3 { border-left: 4px solid var(--grey); }
+
+    .pri-pill {
+      display: inline-block;
+      padding: 2px 9px;
+      border-radius: 100px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+    .pri-pill.P0 { background: var(--red-bg); color: var(--red); }
+    .pri-pill.P1 { background: var(--amber-bg); color: var(--amber); }
+    .pri-pill.P2 { background: var(--accent-bg); color: var(--accent); }
+    .pri-pill.P3 { background: var(--grey-bg); color: var(--grey); }
+
+    .lift-pill {
+      display: inline-block;
+      padding: 2px 9px;
+      border-radius: 100px;
+      font-size: 10px;
+      font-weight: 800;
+      background: var(--accent-bg);
+      color: var(--accent);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ===== Cross-cutting strip ===== */
+    .crosscut {
+      margin-top: 36px;
+      padding: 20px 24px;
+      background: var(--surface);
+      border: 1px dashed var(--border-strong);
+      border-radius: 14px;
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .crosscut.notes-block {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+    }
+    .crosscut .label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+    }
+    .crosscut .notes-body {
+      font-size: 14px;
+      color: var(--ink-soft);
+      line-height: 1.55;
+      min-height: 48px;
+      white-space: pre-wrap;
+    }
+    body.edit-mode .crosscut .notes-body {
+      outline: 1px dashed var(--border-strong);
+      outline-offset: 4px;
+      border-radius: 4px;
+      min-height: 80px;
+    }
+    .crosscut .desc {
+      font-size: 13px;
+      color: var(--ink-soft);
+      flex: 1;
+      min-width: 280px;
+    }
+
+    /* ===== Detail panel ===== */
+    .detail-panel {
+      margin-top: 36px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px 28px;
+      box-shadow: var(--shadow);
+      display: none;
+    }
+    .detail-panel.open { display: block; }
+    .detail-panel .dp-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 14px;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .detail-panel .dp-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+    }
+    .detail-panel .dp-title {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.015em;
+      margin-top: 4px;
+    }
+    .detail-panel .close-btn {
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
+      color: var(--ink-soft);
+      font: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 100px;
+      cursor: pointer;
+    }
+    .detail-panel .close-btn:hover { background: var(--border); }
+    .detail-panel .dp-body { font-size: 14px; color: var(--ink-soft); line-height: 1.6; }
+    .detail-panel .dp-body strong { color: var(--ink); }
+    .detail-panel .dp-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+    .dp-field { background: var(--surface-soft); border-radius: 10px; padding: 12px 14px; }
+    .dp-field .lab {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 4px;
+    }
+    .dp-field .val {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink);
+      font-variant-numeric: tabular-nums;
+    }
+    .dp-field.lift .val { color: var(--accent); }
+
+    .empty-state {
+      padding: 14px 20px;
+      background: var(--surface-soft);
+      border: 1px dashed var(--border-strong);
+      border-radius: 10px;
+      font-size: 13px;
+      color: var(--ink-faint);
+      margin-top: 14px;
+    }
+
+    footer {
+      margin-top: 36px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      font-size: 11.5px;
+      color: var(--ink-faint);
+      line-height: 1.6;
+    }
+
+    @media (max-width: 1100px) {
+      .flow { grid-template-columns: 1fr; gap: 24px; }
+      .lines { display: none; }
+    }
+
+    /* ===== Edit mode ===== */
+    .mode-buttons { display: flex; gap: 8px; align-items: center; }
+    .mode-btn {
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      color: var(--ink);
+      font: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 7px 14px;
+      border-radius: 100px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .mode-btn:hover { background: var(--surface-soft); }
+    .mode-btn.primary.active {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+    .mode-btn.danger { color: var(--red); border-color: var(--red-bg); }
+    .mode-btn.danger:hover { background: var(--red-bg); }
+
+    .edit-only { display: none !important; }
+    body.edit-mode .edit-only { display: inline-flex !important; }
+    body.edit-mode .link-editor.edit-only { display: block !important; }
+
+    /* contenteditable affordances */
+    body.edit-mode [contenteditable="true"]:hover {
+      outline: 1px dashed var(--border-strong);
+      outline-offset: 2px;
+      border-radius: 3px;
+    }
+    body.edit-mode [contenteditable="true"]:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+      background: var(--surface-soft);
+      border-radius: 4px;
+    }
+    body.edit-mode .node { padding-left: 38px; }
+    body.edit-mode .node.solution .pri-pill { cursor: pointer; }
+    body.edit-mode .node.solution .pri-pill:hover {
+      box-shadow: 0 0 0 2px var(--ink-faint);
+    }
+    body.edit-mode .crosscut .pri-pill { cursor: pointer; }
+    body.edit-mode .crosscut .pri-pill:hover {
+      box-shadow: 0 0 0 2px var(--ink-faint);
+    }
+
+    .drag-handle {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: grab;
+      color: var(--ink-faint);
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1;
+      width: 18px;
+      height: 24px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+    }
+    .drag-handle:active { cursor: grabbing; }
+    body.edit-mode .node { position: relative; }
+
+    .node.dragging { opacity: 0.35; }
+    .node.drag-over-top { box-shadow: 0 -3px 0 0 var(--accent), var(--shadow); }
+    .node.drag-over-bot { box-shadow: 0 3px 0 0 var(--accent), var(--shadow); }
+
+    /* Link editor inside problem nodes */
+    .link-editor {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border);
+    }
+    .link-editor .le-row + .le-row { margin-top: 8px; }
+    .link-editor .le-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 5px;
+    }
+    .link-editor .le-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      align-items: center;
+    }
+    .le-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 4px 3px 8px;
+      border-radius: 100px;
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ink-soft);
+    }
+    .le-chip .rm {
+      cursor: pointer;
+      color: var(--red);
+      font-weight: 800;
+      padding: 0 4px;
+      font-size: 13px;
+      line-height: 1;
+    }
+    .le-add {
+      background: transparent;
+      border: 1px dashed var(--border-strong);
+      color: var(--ink-faint);
+      font: inherit;
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 100px;
+      cursor: pointer;
+    }
+    .le-add:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .edit-banner {
+      background: var(--accent-bg);
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-size: 12.5px;
+      margin-bottom: 18px;
+      display: none;
+    }
+    body.edit-mode .edit-banner { display: block; }
+
+    /* Delete button on each node */
+    .delete-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 22px;
+      height: 22px;
+      border-radius: 100px;
+      background: var(--red-bg);
+      color: var(--red);
+      border: 1px solid var(--red);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      z-index: 3;
+    }
+    body.edit-mode .delete-btn { display: inline-flex; }
+    .delete-btn:hover {
+      background: var(--red);
+      color: white;
+    }
+
+    /* ===== Tabs ===== */
+    .tabs {
+      display: flex;
+      gap: 4px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .tabs .mode-buttons {
+      margin-left: auto;
+      padding-bottom: 6px;
+    }
+    .tab-btn {
+      background: transparent;
+      border: none;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink-faint);
+      padding: 14px 22px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: color 0.15s ease, border-color 0.15s ease;
+    }
+    .tab-btn:hover { color: var(--ink-soft); }
+    .tab-btn.active {
+      color: var(--ink);
+      border-bottom-color: var(--ink);
+    }
+    .tab-panel.hidden { display: none; }
+
+    /* ===== Context tab content ===== */
+    .ctx-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 20px;
+      margin-bottom: 4px;
+    }
+    .ctx-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px 26px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 20px;
+    }
+    .ctx-grid .ctx-block { margin-bottom: 0; }
+    .ctx-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 12px;
+    }
+    .ctx-body {
+      font-size: 15px;
+      color: var(--ink);
+      line-height: 1.55;
+    }
+    .ctx-body strong { font-weight: 700; }
+    .ctx-headline {
+      background: linear-gradient(135deg, var(--accent-bg) 0%, var(--surface) 70%);
+      border-color: var(--accent);
+    }
+    .ctx-bignum {
+      font-size: 44px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: var(--accent);
+      line-height: 1.05;
+      font-variant-numeric: tabular-nums;
+    }
+    .ctx-bigsub {
+      font-size: 13.5px;
+      color: var(--ink-soft);
+      margin-top: 6px;
+    }
+    .ctx-bigfoot {
+      font-size: 13.5px;
+      color: var(--ink);
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px dashed var(--border-strong);
+      line-height: 1.55;
+    }
+    .ctx-bigfoot strong { color: var(--accent); font-weight: 800; }
+
+    .ctx-table-wrap {
+      overflow-x: auto;
+      margin-bottom: 12px;
+    }
+    .ctx-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      font-variant-numeric: tabular-nums;
+    }
+    .ctx-table th, .ctx-table td {
+      padding: 9px 12px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+    }
+    .ctx-table th {
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      background: var(--surface-soft);
+    }
+    .ctx-table td.num, .ctx-table th.num { text-align: right; }
+    .ctx-table tr.ctx-focus { background: var(--accent-bg); }
+    .ctx-table tr.ctx-focus td:first-child { font-weight: 700; }
+    .ctx-table tr.ctx-total td {
+      font-weight: 700;
+      color: var(--ink);
+      border-top: 2px solid var(--border-strong);
+      border-bottom: none;
+    }
+    .ctx-tag {
+      display: inline-block;
+      background: var(--accent);
+      color: white;
+      font-size: 9.5px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 100px;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+    .ctx-note {
+      font-size: 13.5px;
+      color: var(--ink-soft);
+      padding: 12px 16px;
+      background: var(--surface-soft);
+      border-left: 3px solid var(--accent);
+      border-radius: 6px;
+      line-height: 1.5;
+    }
+    .ctx-note strong { color: var(--ink); font-weight: 700; }
+
+    .ctx-method {
+      padding-left: 22px;
+      margin: 0;
+    }
+    .ctx-method li {
+      padding: 6px 0;
+      color: var(--ink-soft);
+      line-height: 1.55;
+      font-size: 14px;
+    }
+    .ctx-method li strong { color: var(--ink); font-weight: 700; }
+
+    .ctx-metric-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+    .ctx-metric {
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .ctx-metric .m-name {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+    .ctx-metric .m-def {
+      font-size: 12px;
+      color: var(--ink-faint);
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+    .ctx-metric .m-vals {
+      font-size: 18px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+    .ctx-metric .m-cur { color: var(--ink-soft); }
+    .ctx-metric .m-arrow { color: var(--ink-faint); margin: 0 6px; }
+    .ctx-metric .m-tgt { color: var(--accent); }
+
+    .ctx-guardrail {
+      border-left: 4px solid var(--amber);
+    }
+    .ctx-guardrail .g-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .ctx-guardrail .g-text {
+      flex: 1;
+      font-size: 14px;
+      color: var(--ink-soft);
+      line-height: 1.5;
+    }
+    .ctx-guardrail .g-text strong { color: var(--ink); font-weight: 700; }
+    .ctx-guardrail .g-text em { color: var(--amber); font-style: normal; font-weight: 700; }
+    .ctx-guardrail .g-vals {
+      font-size: 17px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    @media (max-width: 1100px) {
+      .ctx-grid { grid-template-columns: 1fr; }
+    }
+
+    /* "+ Add" button at the bottom of each column */
+    .col-add-btn {
+      display: none;
+      background: transparent;
+      border: 1px dashed var(--border-strong);
+      color: var(--ink-faint);
+      font: inherit;
+      font-size: 12.5px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      padding: 14px 18px;
+      border-radius: 12px;
+      cursor: pointer;
+      margin-top: 4px;
+      text-align: center;
+      transition: all 0.15s ease;
+    }
+    body.edit-mode .col-add-btn { display: block; }
+    .col-add-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-bg);
+    }
+  </style>
+</head>
+<body class="">
+  <div class="container">
+
+    <nav class="tabs" role="tablist">
+      <button class="tab-btn" data-tab="context" role="tab">Context &amp; Targets</button>
+      <button class="tab-btn active" data-tab="flowchart" role="tab">Flowchart</button>
+      <div class="mode-buttons">
+        <button class="mode-btn primary" id="edit-toggle">Edit mode</button>
+        <button class="mode-btn" id="export-btn">Download HTML</button>
+        <button class="mode-btn danger" id="reset-btn">Reset</button>
+      </div>
+    </nav>
+
+    <div class="edit-banner">
+      <strong>Edit mode is on.</strong>
+      Click any text to edit. On the Flowchart tab: drag the <span style="font-weight:700;">⋮⋮</span> handle on the left of a node to reorder, click a priority pill (P0/P1/…) to cycle, and use the link editors inside problems to change connections.
+    </div>
+
+    <div id="tab-flowchart" class="tab-panel">
+
+    <div class="eyebrow">Interactive flowchart · May 2026</div>
+    <h1>Plan to Increase Direct Qualified Onboarding share to 60%</h1>
+    <p class="lede">Current Direct Qualified Onboarding % in SMB Freelancers and Soleprops ~45-50% (last 3 months)<div><b>March 2026: Total 245 Freelancer and Sole Prop ICP OBs saved by sales.</b></div></p>
+
+    <div class="controls">
+      <div class="filters">
+        <span class="label">Priority</span>
+        <button class="chip active" data-filter="all">All</button>
+        <button class="chip p0" data-filter="P0">P0</button>
+        <button class="chip p1" data-filter="P1">P1</button>
+        <button class="chip p2" data-filter="P2">P2</button>
+        <button class="chip p3" data-filter="P3">P3</button>
+      </div>
+      <div class="aggregate">
+        <div class="agg-item"><div class="lab">Solutions shown</div><div class="val" id="agg-count">10</div></div>
+        <div class="agg-item"><div class="lab">Combined reach</div><div class="val" id="agg-addr">375</div></div>
+        <div class="agg-item lift"><div class="lab">Total lift</div><div class="val" id="agg-lift">+15.5 pp</div></div>
+      </div>
+      <div class="aggregate-auto" id="aggregate-auto">
+        <span class="ac-label">Auto-calc from solutions:</span>
+        <span><b id="auto-count">11</b> shown</span>
+        <span>·</span>
+        <span><b id="auto-addr">423</b> reach</span>
+        <span>·</span>
+        <span class="ac-lift"><b id="auto-lift">+16.0 pp</b> lift</span>
+      </div>
+    </div>
+
+    <div class="flow" id="flow">
+      <svg class="lines" id="lines" preserveAspectRatio="none" width="1376" height="2147.3203125" viewBox="0 0 1376 2147.3203125"></svg>
+
+      <!-- ===== Stages column ===== -->
+      <div class="col" id="col-stages">
+        <div class="col-header">Onboarding stage · where they got stuck<div><br></div><div>(SP and FL ICPs who onboarded through sales after dropping off in the product journey)</div></div>
+
+        <div class="node stage" data-type="stage" data-id="signup">
+          <div class="top">
+            <div class="name">Post sign-up&nbsp;<div>(42% Activation Rate)</div></div>
+            <div class="badge">28 stuck</div>
+          </div>
+          <div class="code">SIGN_UP_SUCCESS</div>
+          <div class="stat">
+            <span><b class="pct-big">11%</b> of stuck</span>
+            <span>15 FL · 13 SP</span>
+          </div>
+        <button class="delete-btn edit-only" title="Delete this node">×</button></div>
+
+        <div class="node stage in-scope" data-type="stage" data-id="business">
+          <div class="scope-pill"><span class="dot"></span> Priority : High</div>
+          <div class="top">
+            <div class="name">Business details form&nbsp;<div>(51% Activation Rate)</div></div>
+            <div class="badge">74 stuck</div>
+          </div>
+          <div class="code">COMPANY_PAN_DETAILS</div>
+          <div class="stat">
+            <span><b class="pct-big">30%</b> of all stuck customers fall here</span>
+            <span>40 FL · 34 SP</span>
+          </div>
+        <button class="delete-btn edit-only" title="Delete this node">×</button></div>
+
+        <div class="node stage" data-type="stage" data-id="aadhaar">
+          <div class="top">
+            <div class="name">Aadhaar / DigiLocker<div>(48% Activation Rate)</div></div>
+            <div class="badge">23 stuck</div>
+          </div>
+          <div class="code">UBO_PAN_DETAILS</div>
+          <div class="stat">
+            <span><b class="pct-big">9%</b> of stuck</span>
+            <span>12 FL · 11 SP</span>
+          </div>
+        <button class="delete-btn edit-only" title="Delete this node">×</button></div>
+
+        <div class="node stage in-scope" data-type="stage" data-id="docupload">
+          <div class="scope-pill"><span class="dot"></span> Priority : High</div>
+          <div class="top">
+            <div class="name">Document upload / bank statement<div>(52% Activation Rate)</div></div>
+            <div class="badge">120 stuck</div>
+          </div>
+          <div class="code">COMPANY_BANK_ACCOUNT_DETAILS</div>
+          <div class="stat">
+            <span><b class="pct-big">49%</b> of all stuck customers fall here <span class="biggest-tag">biggest leak</span></span>
+            <span>81 FL · 39 SP</span>
+          </div>
+        <button class="delete-btn edit-only" title="Delete this node">×</button></div>
+
+        <button class="col-add-btn" data-add="stage">+ Add stage</button>
+      </div>
+
+      <!-- ===== Problems column ===== -->
+      <div class="col" id="col-problems">
+        <div class="col-header">Why they got stuck (Problems)</div>
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        <button class="col-add-btn" data-add="problem">+ Add problem</button>
+      <div class="node problem" data-type="problem" data-id="not-ready" data-stages="signup" data-solutions="s8,s10">
+          <div class="top">
+            <div class="name">Not ready yet</div>
+            <div class="badge">~28</div>
+          </div>
+          <div class="detail">First international payment is at least a month away. Some were just exploring Skydo and were relatively low intent.&nbsp;</div>
+        <button class="delete-btn edit-only" title="Delete this node">×</button></div><div class="node problem" data-type="problem" data-id="form-friction" data-stages="business" data-solutions="s2,s7">
+          <div class="top">
+            <div class="name">Business-details form friction</div>
+            <div class="badge">~40</div>
+          </div>
+          <div class="detail">Confusing industry dropdown, 100-character description is confusing, too many questions on one screen, lead-qual fields not necessarily needed for compliance.</div>
+        <button class="delete-btn edit-only" title="Delete this node">×</button></div><div class="node problem" data-type="problem" data-id="anticipating" data-stages="business" data-solutions="s2,s6,s8">
+          <div class="top">
+            <div class="name">Need more information on Skydo</div>
+            <div class="badge">~34</div>
+          </div>
+          <div class="detail">These are users who need more information or conviction on Skydo before providing their personal details.&nbsp;<div>Themes: "What exactly does Skydo do?", "Are there any account opening charges?" "let me check with my CA".&nbsp;</div><div>The form seems high commitment.</div></div>
+        <button class="delete-btn edit-only" title="Delete this node">×</button></div><div class="node problem" data-type="problem" data-id="id-fails" data-stages="aadhaar" data-solutions="s5">
+          <div class="top">
+            <div class="name">Digilocker intermittent failures</div>
+            <div class="badge">~23</div>
+          </div>
+          <div class="detail">DigiLocker times out, OTP doesn't arrive, or Aadhaar is linked to an old mobile. No fallback shown currently, user retries 2–3 times and drops off.</div>
+        <button class="delete-btn edit-only" title="Delete this node">×</button></div><div class="node problem" data-type="problem" data-id="no-intl-txns" data-stages="docupload" data-solutions="s1,s4,s8">
+          <div class="top">
+            <div class="name">Bank statement gpt parser fails, alt-doc path is not visible / not clearly explained</div>
+            <div class="badge">~60</div>
+          </div>
+          <div class="detail">70% of ICP Freelancers try uploading a bank statement -&nbsp;<div>The GPT parser auto-verifies 411 of 757 freelancer bank-statement uploads (54%); 346 (46%) fail.&nbsp;<div>Alternative docs work in these cases — every one of the 346 onboarded via platform screenshots, contracts, or invoices.&nbsp;</div><div>Main problem - sales led discovery is currently the default way users understand the alternate document flow.</div></div></div>
+        <button class="delete-btn edit-only" title="Delete this node">×</button></div><div class="node problem" data-type="problem" data-id="sp-declaration" data-stages="docupload" data-solutions="s3">
+          <div class="top">
+            <div class="name">Some Sole Props with GST and IEC are still stuck at Doc Upload</div>
+            <div class="badge">~27</div>
+          </div>
+          <div class="detail">Sole props with GST + IEC can directly onboard without any docs, we show them the SP FL question + doc upload when we are unable to retrieve either one othe above docs.<div>Sales primarily helps through manual override or ask them to upload physical copies of GST / IEC</div></div>
+        <button class="delete-btn edit-only" title="Delete this node">×</button></div><div class="node problem" data-type="problem" data-id="registration-pending" data-stages="docupload" data-solutions="s6,s4,s11">
+          <div class="top">
+            <div class="name">SoleProp FL question - Govt doc issues - Manual override</div>
+            <div class="badge">~33</div>
+          </div>
+          <div class="detail"><div>Sales Assisted</div><div><span style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif;">S-&gt; FP = 22 ICPs per month&nbsp;</span></div><div>FP -&gt; S = 9 ICPs per month</div><div><br></div><div>Other Manual Override</div>~20% combined issues at doc-upload step. Udyam pending, IEC under reactivation, GST name mismatch, current account not yet open. Funnel errors out with a generic message.<div>Sales helps these cases primarily through manual override</div></div>
+        <button class="delete-btn edit-only" title="Delete this node">×</button></div><div class="node problem" data-type="problem" data-id="nda-trust" data-stages="docupload" data-solutions="s9">
+          <div class="top">
+            <div class="name">FL: NDA / contract sharing hesitation</div>
+            <div class="badge">~11</div>
+          </div>
+          <div class="detail">Freelancers hesitate to upload signed contracts because of NDA obligations/confidentiality. No explanation of what we store and why.</div>
+        <button class="delete-btn edit-only" title="Delete this node">×</button></div><div class="node problem hidden" data-type="problem" data-id="new-problem-1779448935684" data-stages="" data-solutions="">
+        <div class="top">
+          <div class="name">New problem</div>
+          <div class="badge">~0</div>
+        </div>
+        <div class="detail">Describe the problem here.</div>
+      </div><div class="node problem hidden" data-type="problem" data-id="new-problem-1779448937275" data-stages="" data-solutions="">
+        <div class="top">
+          <div class="name">New problem</div>
+          <div class="badge">~0</div>
+        </div>
+        <div class="detail">Describe the problem here.</div>
+      </div><div class="node problem hidden" data-type="problem" data-id="new-problem-1779448942234" data-stages="" data-solutions="">
+        <div class="top">
+          <div class="name">New problem</div>
+          <div class="badge">~0</div>
+        </div>
+        <div class="detail">Describe the problem here.</div>
+      </div><div class="node problem hidden" data-type="problem" data-id="new-problem-1779448942910" data-stages="" data-solutions="">
+        <div class="top">
+          <div class="name">New problem</div>
+          <div class="badge">~0</div>
+        </div>
+        <div class="detail">Describe the problem here.</div>
+      </div><div class="node problem hidden" data-type="problem" data-id="new-problem-1779448943475" data-stages="" data-solutions="">
+        <div class="top">
+          <div class="name">New problem</div>
+          <div class="badge">~0</div>
+        </div>
+        <div class="detail">Describe the problem here.</div>
+      </div></div>
+
+      <!-- ===== Solutions column ===== -->
+      <div class="col" id="col-solutions">
+        <div class="col-header">What we plan on improving (Solutions)</div>
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        <button class="col-add-btn" data-add="solution">+ Add solution</button>
+      <div class="node solution P0" data-type="solution" data-id="s1" data-priority="P0">
+          <div class="top">
+            <div class="name">#1 Freelancer alternative-document flow</div>
+            <span class="pri-pill P0">P0</span>
+          </div>
+          <div class="detail">- Surface the alt-doc path more prominently.&nbsp;<div><div>What docs already work: platform screenshots (23% of recoveries), signed contracts (17%), invoices (12%).</div><div><br></div><div>- Productise the Contract-only flow that is used by sales.</div><div><br>- Probably add a "what docs do you have? / help" section.</div></div><div>- Cadence on users asking help (already in progress)</div></div>
+          <div class="stat">
+            <span class="lift-pill">+4.1 pp</span>
+            <span>93 / mo · 70% conf.</span>
+          </div>
+        <button class="delete-btn edit-only" title="Delete this node">×</button></div><div class="node solution P0" data-type="solution" data-id="s2" data-priority="P0">
+          <div class="top">
+            <div class="name">#2 Business details form fixes</div>
+            <span class="pri-pill P0">P0</span>
+          </div>
+          <div class="detail">- Help in selecting industry options + reduce choices + reordering according to volume.&nbsp;<div><br></div><div>- More emphasise on submitting website</div><div><br></div><div>- Remove 100-char limit + AI-suggest description.&nbsp;</div><div><br></div><div>- Drop lead-qual questions which are not required.&nbsp;</div><div><br></div><div>- Progressive information disclosure flow instead of showing all questions in one go - One question at a time.&nbsp;</div><div><br></div></div>
+          <div class="stat">
+            <span class="lift-pill">+3.2 pp</span>
+            <span>74 / mo · 70% conf.</span>
+          </div>
+        <button class="delete-btn edit-only" title="Delete this node">×</button></div><div class="node solution P1" data-type="solution" data-id="s7" data-priority="P1">
+        <div class="top">
+          <div class="name">#3 Inline info on skydo and trust building</div>
+          <span class="pri-pill P1">P1</span>
+        </div>
+        <div class="detail">Skydo is 100% compliant, best crossborder solution etc.&nbsp;<div>Nudges to build trust across the flow</div><div><br></div><div>- Inline information on Skydo: (Subtle) What is Skydo, how is it beneficial</div></div>
+        <div class="stat">
+          <span class="lift-pill">+1.0 pp</span>
+          <span>15 / mo · 50% conf.</span>
+        </div>
+      <button class="delete-btn edit-only" title="Delete this node">×</button></div><div class="node solution P1" data-type="solution" data-id="s3" data-priority="P1">
+          <div class="top">
+            <div class="name">#4 Sole-prop fast-forward (GST + IEC declaration)</div>
+            <span class="pri-pill P1">P1</span>
+          </div>
+          <div class="detail">When a users says I have GST + IEC come - take declaration / give a simpler doc upload experience</div>
+          <div class="stat">
+            <span class="lift-pill">+1.2 pp</span>
+            <span>27 SP / mo · 70% conf.</span>
+          </div>
+        <button class="delete-btn edit-only" title="Delete this node">×</button></div><div class="node solution P1" data-type="solution" data-id="s4" data-priority="P1">
+          <div class="top">
+            <div class="name">#5 Document readiness checklist</div>
+            <span class="pri-pill P1">P1</span>
+          </div>
+          <div class="detail">A checklist is currently shown, but very hard to comprehend. Before the PAN step, show "you'll need these — do you have them?"<div>Soleprop document checklist exists, check if that works for freelancers</div></div>
+          <div class="stat">
+            <span class="lift-pill">+1.8 pp</span>
+            <span>35–45 / mo · 70% conf.</span>
+          </div>
+        <button class="delete-btn edit-only" title="Delete this node">×</button></div><div class="node solution P1" data-type="solution" data-id="s11" data-priority="P1">
+        <div class="top">
+          <div class="name">#6 Check if we can revamp/ Eliminate Sole Prop Freelancer question based on Document check list or other fields</div>
+          <span class="pri-pill P1">P1</span>
+        </div>
+        <div class="detail">We can exempt some FL and SP from the question.<div>-&gt; Add on product SP-&gt;FL or vice versa question switch (after discussion with compliance)</div></div>
+        <div class="stat">
+          <span class="lift-pill">+1.0 pp</span>
+          <span>33 / mo · 50% conf.</span>
+        </div>
+      </div><div class="node solution P1" data-type="solution" data-id="s5" data-priority="P1">
+          <div class="top">
+            <div class="name">#7 DigiLocker fallback path</div>
+            <span class="pri-pill P1">P1</span>
+          </div>
+          <div class="detail">Based on success of OVD, we can iplement a similar Aadhaar image upload fallback flow for Digilocker failures.</div>
+          <div class="stat">
+            <span class="lift-pill">+1.0 pp</span>
+            <span>23 / mo · 70% conf.</span>
+          </div>
+        <button class="delete-btn edit-only" title="Delete this node">×</button></div><div class="node solution P2" data-type="solution" data-id="s6" data-priority="P2">
+          <div class="top">
+            <div class="name">#8 Registration-pending state</div>
+            <span class="pri-pill P2">P2</span>
+          </div>
+          <div class="detail">Capture specific reason for dependency (Udyam, IEC, GST, current account) + expected timeline. Automated nudges off product. One-click resume.</div>
+          <div class="stat">
+            <span class="lift-pill">+1.3 pp</span>
+            <span>35–45 / mo · 50% conf.</span>
+          </div>
+        <button class="delete-btn edit-only" title="Delete this node">×</button></div><div class="node solution P2" data-type="solution" data-id="s8" data-priority="P2">
+          <div class="top">
+            <div class="name">#9 Awaiting-first-payment nudge</div>
+            <span class="pri-pill P2">P2</span>
+          </div>
+          <div class="detail">- Encourage users with a future payment to complete onboarding anyway: account is ready and its faster to onboard now even if your payment is coming later.</div>
+          <div class="stat">
+            <span class="lift-pill">+0.8 pp</span>
+            <span>~60 / mo · 20% conf.</span>
+          </div>
+        <button class="delete-btn edit-only" title="Delete this node">×</button></div><div class="node solution P3" data-type="solution" data-id="s9" data-priority="P3">
+          <div class="top">
+            <div class="name">#10 Contract / NDA trust signal</div>
+            <span class="pri-pill P3">P3</span>
+          </div>
+          <div class="detail">- Trust marker: "documents aren't stored and are only used for verification of proof of business".<div>- Contract masker - mask sensitive personal info before submitting your contract to Skydo</div></div>
+          <div class="stat">
+            <span class="lift-pill">+0.3 pp</span>
+            <span>8–10 FL / mo · 50% conf.</span>
+          </div>
+        <button class="delete-btn edit-only" title="Delete this node">×</button></div><div class="node solution P3" data-type="solution" data-id="s10" data-priority="P3">
+          <div class="top">
+            <div class="name">#11 Pre-PAN trust section + savings calculator (minimal)</div>
+            <span class="pri-pill P3">P3</span>
+          </div>
+          <div class="detail">- RBI badge, customer count, other trust markers, specific testimonial above PAN.&nbsp;<div><br></div><div>- Savings calculator: Skydo's rate vs a typical bank.</div></div>
+          <div class="stat">
+            <span class="lift-pill">+0.3 pp</span>
+            <span>20–22 / mo · 20% conf.</span>
+          </div>
+        <button class="delete-btn edit-only" title="Delete this node">×</button></div></div>
+    </div>
+
+    <!-- Notes section — free-form text. Editable in Edit mode. -->
+    <div class="crosscut notes-block">
+      <span class="label">Notes</span>
+      <div class="notes-body">Soleprop / Freelancer Question -&gt; revamp this or not / <div>Clear out compliance dependencies</div></div>
+    </div>
+
+    <!-- Detail panel -->
+    <div class="detail-panel" id="detail">
+      <div class="dp-head">
+        <div>
+          <div class="dp-eyebrow" id="dp-eyebrow">Proposed change</div>
+          <div class="dp-title" id="dp-title">#7 Registration-pending state</div>
+        </div>
+        <button class="close-btn" id="dp-close">Close ×</button>
+      </div>
+      <div class="dp-body" id="dp-body">Capture specific reason (Udyam, IEC, GST, current account) + expected timeline. Automated nudges. One-click resume.</div>
+      <div class="dp-grid" id="dp-grid"><div class="dp-field"><div class="lab">Priority</div><div class="val">P2</div></div><div class="dp-field lift"><div class="lab">Expected lift</div><div class="val">+1.3 pp</div></div><div class="dp-field"><div class="lab">Addressable / mo + confidence</div><div class="val">35–45 / mo · 50% conf.</div></div><div class="dp-field"><div class="lab">Addresses</div><div class="val">• Need more information on Skydo<br>• Govt doc issues - Manual override</div></div></div>
+    </div>
+
+    </div>
+    <div id="tab-context" class="tab-panel hidden">
+
+      <div class="eyebrow">Context · May 2026</div>
+      <h1>Context &amp; Targets: What we want to achieve</h1>
+      <p class="lede">Today monthly, ~700 freelancers and sole props start direct onboarding, get stuck mid-flow, and only finish after a sales rep steps in. Our aim is to fix the product so most of them finish on their own.</p>
+
+      <div class="ctx-grid">
+        <div class="ctx-block">
+          <div class="ctx-label">The aim</div>
+          <div class="ctx-body">Onboard <strong>~70% of today's sales-saved ICPs directly</strong> — without needing a sales call.&nbsp;<div>The current focus for SMB is <strong>Freelancers and Sole Proprietors</strong>.</div><div>Reason: Low value cohort should be completely self serve + FL and SP are ~80% of all SMB users</div></div>
+        </div>
+        <div class="ctx-block ctx-headline">
+          <div class="ctx-label">target</div>
+          <div class="ctx-bignum">45% → 60%</div>
+          <div class="ctx-bigsub">Direct ICP onboarding share (DQO%) — all biz types combined</div>
+          <div class="ctx-bigfoot">At March 2026 volume, this is an aspiration of <strong>+211 additional direct ICP onboardings per month</strong> — recovering ~70% of customers who today are saved by sales.</div>
+        </div>
+      </div>
+
+      <div class="ctx-block">
+        <div class="ctx-label">Where the gap is · March 2026</div>
+        <div class="ctx-table-wrap">
+          <table class="ctx-table">
+            <thead>
+              <tr>
+                <th>Business type</th>
+                <th class="num">Sign-ups</th>
+                <th class="num">Total ICP OBs</th>
+                <th class="num">Direct ICP OBs</th>
+                <th class="num">DQO %</th>
+                <th class="num">Saved by sales</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="ctx-focus">
+                <td>Freelancer<span class="ctx-tag">Focus</span></td>
+                <td class="num">3,776</td>
+                <td class="num">509</td>
+                <td class="num">235</td>
+                <td class="num">46%</td>
+                <td class="num">148</td>
+              </tr>
+              <tr class="ctx-focus">
+                <td>Sole Prop<span class="ctx-tag">Focus</span></td>
+                <td class="num">1,248</td>
+                <td class="num">576</td>
+                <td class="num">245</td>
+                <td class="num">43%</td>
+                <td class="num">97</td>
+              </tr>
+              <tr><td>Company</td><td class="num">607</td><td class="num">340</td><td class="num">163</td><td class="num">48%</td><td class="num">35</td></tr>
+              <tr><td>Partnership</td><td class="num">176</td><td class="num">87</td><td class="num">34</td><td class="num">39%</td><td class="num">12</td></tr>
+              <tr><td>LLP</td><td class="num">149</td><td class="num">87</td><td class="num">46</td><td class="num">53%</td><td class="num">9</td></tr>
+              <tr class="ctx-total"><td>Total</td><td class="num">5,956</td><td class="num">1,599</td><td class="num">723</td><td class="num">45%</td><td class="num">301</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="ctx-note">Freelancers + Sole Props account for <strong>245 of 301</strong> ICP onboardings that needed sales help (81%). That's why they're our focus.</div>
+      </div>
+
+      <div class="ctx-block">
+        <div class="ctx-label">How we identify problems and solutions</div>
+        <ol class="ctx-method">
+          <li><strong>Source the cohort.</strong> Pick every FL + SP customer who started direct onboarding, dropped off mid-flow, and was later onboarded with sales help. For March 2026 that's 245 customers.</li>
+          <li><strong>Find where they got stuck.</strong> Tag each customer by the funnel stage they last left.</li>
+          <li><strong>Learn why.</strong> Read sales notes from CRM, listen to recorded call snippets, and call dropoffs when we can reach them.</li>
+          <li><strong>Group patterns into problems.</strong> Name the recurring themes (e.g., "Bank statement parser fails — alt-doc path is buried").</li>
+          <li><strong>Design and prioritise solutions.</strong> For each problem, size the addressable population and estimate lift on DQO%. Priority: P0 / P1 / P2 / P3.</li>
+        </ol>
+      </div>
+
+      <div class="ctx-block">
+        <div class="ctx-label">Success metrics</div>
+        <div class="ctx-metric-grid">
+          <div class="ctx-metric">
+            <div class="m-name">DQO%</div>
+            <div class="m-def">Direct ICP OBs ÷ Total ICP OBs</div>
+            <div class="m-vals"><span class="m-cur">45%</span><span class="m-arrow">→</span><span class="m-tgt">60%</span></div>
+          </div>
+          <div class="ctx-metric">
+            <div class="m-name">DO%</div>
+            <div class="m-def">Direct OBs ÷ Total OBs</div>
+            <div class="m-vals"><span class="m-cur">59%</span><span class="m-arrow">→</span><span class="m-tgt">70%</span></div>
+          </div>
+          <div class="ctx-metric">
+            <div class="m-name">SDO%</div>
+            <div class="m-def">Direct OBs ÷ Total sign-ups</div>
+            <div class="m-vals"><span class="m-cur">28%</span><span class="m-arrow">→</span><span class="m-tgt">33%</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ctx-block ctx-guardrail">
+        <div class="ctx-label">Guardrail</div>
+        <div class="g-row">
+          <div class="g-text"><strong>Overall ICP2O%</strong> = Total ICP OBs ÷ Total ICP sign-ups. <em>Must not drop.</em> The aim is to shift work from sales to product — not to lose customers in the process.</div>
+          <div class="g-vals"><span class="m-cur">89%</span><span class="m-arrow">→</span><span class="m-tgt">≥ 90%</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <footer>
+      Author — Atishay Jain
+    </footer>
+
+  </div>
+
+  <script>
+    // ===== Connection graph =====
+    // problem.dataset.stages = comma-separated stage ids it belongs to
+    // problem.dataset.solutions = comma-separated solution ids that address it
+    // Build a list of edges {from, to, type} for SVG rendering.
+
+    const flow = document.getElementById('flow');
+    const svg = document.getElementById('lines');
+    const detail = document.getElementById('detail');
+
+    const stages = Array.from(document.querySelectorAll('.node.stage'));
+    const problems = Array.from(document.querySelectorAll('.node.problem'));
+    const solutions = Array.from(document.querySelectorAll('.node.solution'));
+    const allNodes = [...stages, ...problems, ...solutions];
+
+    function nodeById(id) {
+      return allNodes.find(n => n.dataset.id === id);
+    }
+
+    // Edges: stage <-> problem, problem <-> solution
+    const edges = [];
+    problems.forEach(p => {
+      const sIds = p.dataset.stages.split(',').filter(Boolean);
+      const solIds = p.dataset.solutions.split(',').filter(Boolean);
+      sIds.forEach(sId => edges.push({ from: nodeById(sId), to: p, type: 'sp' }));
+      solIds.forEach(solId => {
+        const sn = nodeById(solId);
+        if (sn) edges.push({ from: p, to: sn, type: 'ps' });
+      });
+    });
+
+    // ===== Draw SVG curves =====
+    function drawLines() {
+      const flowRect = flow.getBoundingClientRect();
+      svg.setAttribute('width', flowRect.width);
+      svg.setAttribute('height', flowRect.height);
+      svg.setAttribute('viewBox', `0 0 ${flowRect.width} ${flowRect.height}`);
+      svg.innerHTML = '';
+
+      edges.forEach((e, i) => {
+        if (!e.from || !e.to) return;
+        if (e.from.classList.contains('hidden') || e.to.classList.contains('hidden')) return;
+        const fr = e.from.getBoundingClientRect();
+        const tr = e.to.getBoundingClientRect();
+        const x1 = fr.right - flowRect.left;
+        const y1 = fr.top - flowRect.top + fr.height / 2;
+        const x2 = tr.left - flowRect.left;
+        const y2 = tr.top - flowRect.top + tr.height / 2;
+        const dx = (x2 - x1) * 0.55;
+        const d = `M ${x1} ${y1} C ${x1 + dx} ${y1}, ${x2 - dx} ${y2}, ${x2} ${y2}`;
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', d);
+        path.dataset.from = e.from.dataset.id;
+        path.dataset.to = e.to.dataset.id;
+        svg.appendChild(path);
+      });
+    }
+
+    // ===== Focus a node: highlight its full chain =====
+    function chainFor(node) {
+      const set = new Set([node]);
+      const t = node.dataset.type;
+      if (t === 'stage') {
+        problems.forEach(p => {
+          if (p.dataset.stages.split(',').includes(node.dataset.id)) {
+            set.add(p);
+            p.dataset.solutions.split(',').forEach(sid => {
+              const s = nodeById(sid); if (s) set.add(s);
+            });
+          }
+        });
+      } else if (t === 'problem') {
+        node.dataset.stages.split(',').forEach(sid => {
+          const s = nodeById(sid); if (s) set.add(s);
+        });
+        node.dataset.solutions.split(',').forEach(sid => {
+          const s = nodeById(sid); if (s) set.add(s);
+        });
+      } else if (t === 'solution') {
+        problems.forEach(p => {
+          if (p.dataset.solutions.split(',').includes(node.dataset.id)) {
+            set.add(p);
+            p.dataset.stages.split(',').forEach(sid => {
+              const s = nodeById(sid); if (s) set.add(s);
+            });
+          }
+        });
+      }
+      return set;
+    }
+
+    let focused = null;
+    function applyFocus(node) {
+      focused = node;
+      if (!node) {
+        allNodes.forEach(n => { n.classList.remove('active', 'dim'); });
+        svg.querySelectorAll('path').forEach(p => p.classList.remove('active', 'dim'));
+        return;
+      }
+      const chain = chainFor(node);
+      const chainIds = new Set([...chain].map(n => n.dataset.id));
+      allNodes.forEach(n => {
+        if (n.classList.contains('hidden')) return;
+        if (chain.has(n)) {
+          n.classList.remove('dim');
+          n.classList.toggle('active', n === node);
+        } else {
+          n.classList.add('dim');
+          n.classList.remove('active');
+        }
+      });
+      svg.querySelectorAll('path').forEach(p => {
+        const involved = chainIds.has(p.dataset.from) && chainIds.has(p.dataset.to);
+        p.classList.toggle('active', involved);
+        p.classList.toggle('dim', !involved);
+      });
+    }
+
+    // ===== Detail panel =====
+    function openDetail(node) {
+      const t = node.dataset.type;
+      const nameEl = node.querySelector('.name');
+      const detailEl = node.querySelector('.detail');
+      const statEl = node.querySelector('.stat');
+
+      document.getElementById('dp-eyebrow').textContent = {
+        stage: 'Onboarding stage',
+        problem: 'Why they got stuck',
+        solution: 'Proposed change'
+      }[t] || '';
+      document.getElementById('dp-title').textContent = nameEl ? nameEl.textContent : '';
+      document.getElementById('dp-body').innerHTML = detailEl ? detailEl.innerHTML : '';
+
+      const grid = document.getElementById('dp-grid');
+      grid.innerHTML = '';
+      const fields = [];
+
+      if (t === 'stage') {
+        const badge = node.querySelector('.badge');
+        const code = node.querySelector('.code');
+        fields.push(['Stuck count', badge ? badge.textContent : '']);
+        if (code) fields.push(['Event code', code.textContent]);
+        if (statEl) {
+          const spans = statEl.querySelectorAll('span');
+          if (spans[0]) fields.push(['Share of stuck', spans[0].textContent]);
+          if (spans[1]) fields.push(['Breakdown', spans[1].textContent]);
+        }
+        // Linked problems
+        const linked = problems.filter(p =>
+          p.dataset.stages.split(',').includes(node.dataset.id)
+        );
+        if (linked.length) {
+          fields.push(['Problems at this stage', linked.map(p => '• ' + p.querySelector('.name').textContent).join('<br>')]);
+        }
+      } else if (t === 'problem') {
+        const badge = node.querySelector('.badge');
+        fields.push(['Addressable / mo', badge ? badge.textContent : '']);
+        const stageNodes = node.dataset.stages.split(',').map(id => nodeById(id)).filter(Boolean);
+        const solNodes = node.dataset.solutions.split(',').map(id => nodeById(id)).filter(Boolean);
+        if (stageNodes.length) fields.push(['Occurs at', stageNodes.map(s => '• ' + s.querySelector('.name').textContent).join('<br>')]);
+        if (solNodes.length) fields.push(['Solved by', solNodes.map(s => '• ' + s.querySelector('.name').textContent).join('<br>')]);
+        const totalLift = solNodes.reduce((acc, s) => {
+          const lift = parseFloat(s.querySelector('.lift-pill').textContent.replace('+', '').replace('pp', '').trim());
+          return acc + (isNaN(lift) ? 0 : lift);
+        }, 0);
+        if (solNodes.length) fields.push(['Combined lift', '+' + totalLift.toFixed(1) + ' pp']);
+      } else if (t === 'solution') {
+        const pri = node.dataset.priority;
+        const liftEl = node.querySelector('.lift-pill');
+        const statSpans = statEl.querySelectorAll('span');
+        fields.push(['Priority', pri]);
+        if (liftEl) fields.push(['Expected lift', liftEl.textContent]);
+        // statSpans[0] is lift-pill, [1] is "X / mo · Y% conf."
+        if (statSpans.length >= 2) fields.push(['Addressable / mo + confidence', statSpans[1].textContent]);
+        // Linked problems
+        const linkedProblems = problems.filter(p =>
+          p.dataset.solutions.split(',').includes(node.dataset.id)
+        );
+        if (linkedProblems.length) {
+          fields.push(['Addresses', linkedProblems.map(p => '• ' + p.querySelector('.name').textContent).join('<br>')]);
+        }
+      }
+
+      fields.forEach(([lab, val]) => {
+        const f = document.createElement('div');
+        const isLift = /lift/i.test(lab);
+        f.className = 'dp-field' + (isLift ? ' lift' : '');
+        f.innerHTML = '<div class="lab">' + lab + '</div><div class="val">' + val + '</div>';
+        grid.appendChild(f);
+      });
+
+      detail.classList.add('open');
+    }
+
+    function closeDetail() {
+      detail.classList.remove('open');
+    }
+
+    document.getElementById('dp-close').addEventListener('click', () => {
+      closeDetail();
+      applyFocus(null);
+    });
+
+    // ===== Click handling =====
+    allNodes.forEach(n => {
+      n.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (focused === n) {
+          applyFocus(null);
+          closeDetail();
+        } else {
+          applyFocus(n);
+          openDetail(n);
+        }
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!flow.contains(e.target) && !detail.contains(e.target)) {
+        applyFocus(null);
+        closeDetail();
+      }
+    });
+
+    // ===== Priority filter =====
+    const chips = document.querySelectorAll('.chip');
+    let currentFilter = 'all';
+    chips.forEach(c => {
+      c.addEventListener('click', () => {
+        chips.forEach(o => o.classList.remove('active'));
+        c.classList.add('active');
+        currentFilter = c.dataset.filter;
+        applyFilter();
+      });
+    });
+
+    function applyFilter() {
+      // Show/hide solutions by priority. Hide problems whose all solutions are hidden.
+      solutions.forEach(s => {
+        const match = (currentFilter === 'all') || (s.dataset.priority === currentFilter);
+        s.classList.toggle('hidden', !match);
+      });
+      problems.forEach(p => {
+        const linkedSolIds = p.dataset.solutions.split(',').filter(Boolean);
+        const anyVisible = linkedSolIds.some(id => {
+          const s = nodeById(id);
+          return s && !s.classList.contains('hidden');
+        });
+        p.classList.toggle('hidden', !anyVisible);
+      });
+      stages.forEach(stg => {
+        const anyVisibleProblem = problems.some(p =>
+          !p.classList.contains('hidden') &&
+          p.dataset.stages.split(',').includes(stg.dataset.id)
+        );
+        stg.classList.toggle('hidden', !anyVisibleProblem);
+      });
+      applyFocus(null);
+      closeDetail();
+      // Recompute aggregates
+      const visibleSolutions = solutions.filter(s => !s.classList.contains('hidden'));
+      let liftSum = visibleSolutions.reduce((acc, s) => {
+        const liftText = s.querySelector('.lift-pill').textContent;
+        const v = parseFloat(liftText.replace('+', '').replace('pp', '').trim());
+        return acc + (isNaN(v) ? 0 : v);
+      }, 0);
+      // Sum addressable: parse "N / mo" or "N–M / mo" — take the lower bound for ranges.
+      let addrSum = visibleSolutions.reduce((acc, s) => {
+        const spans = s.querySelectorAll('.stat span');
+        if (spans.length < 2) return acc;
+        const raw = spans[1].textContent;
+        const m = raw.match(/(\d+)(?:[–-](\d+))?/);
+        return acc + (m ? parseInt(m[1], 10) : 0);
+      }, 0);
+      const count = visibleSolutions.length;
+      // (The .crosscut block is now a Notes section, not a solution — no longer counted.)
+
+      // The top "agg-*" pills are now manually editable in Edit mode.
+      // We write the live computed numbers into the quieter "auto-*" line beneath them.
+      const ac = document.getElementById('auto-count');
+      const aa = document.getElementById('auto-addr');
+      const al = document.getElementById('auto-lift');
+      if (ac) ac.textContent = count;
+      if (aa) aa.textContent = addrSum;
+      if (al) al.textContent = '+' + liftSum.toFixed(1) + ' pp';
+
+      // Redraw lines for visible-only set
+      setTimeout(drawLines, 50);
+    }
+
+    // ===== Edit mode =====
+    const STORAGE_KEY = 'onb-flow-state-v3';
+    // One-time cleanup of orphaned earlier-version keys (different schemas)
+    try {
+      localStorage.removeItem('onb-flow-state-v1');
+      localStorage.removeItem('onb-flow-state-v2');
+    } catch {}
+    const EDITABLE_SELECTORS = [
+      'h1', '.lede', '.col-header', '.eyebrow',
+      '.node .name', '.node .detail', '.node .badge', '.node .code',
+      '.node .stat span', '.crosscut .notes-body',
+      '.aggregate .lab', '.aggregate .val',
+      // Context tab
+      '.ctx-label', '.ctx-body', '.ctx-bignum', '.ctx-bigsub', '.ctx-bigfoot',
+      '.ctx-table th', '.ctx-table td', '.ctx-note',
+      '.ctx-method li',
+      '.ctx-metric .m-name', '.ctx-metric .m-def',
+      '.m-cur', '.m-tgt',
+      '.ctx-guardrail .g-text'
+    ];
+
+    function rebuildEdges() {
+      edges.length = 0;
+      problems.forEach(p => {
+        const sIds = (p.dataset.stages || '').split(',').filter(Boolean);
+        const solIds = (p.dataset.solutions || '').split(',').filter(Boolean);
+        sIds.forEach(sId => {
+          const s = nodeById(sId);
+          if (s) edges.push({ from: s, to: p, type: 'sp' });
+        });
+        solIds.forEach(solId => {
+          const sn = nodeById(solId);
+          if (sn) edges.push({ from: p, to: sn, type: 'ps' });
+        });
+      });
+    }
+
+    function nameOfNode(id) {
+      const n = nodeById(id);
+      if (!n) return id;
+      const nm = n.querySelector('.name');
+      return nm ? nm.textContent.trim() : id;
+    }
+
+    function renderLinkEditor(p) {
+      let editor = p.querySelector('.link-editor');
+      if (!editor) {
+        editor = document.createElement('div');
+        editor.className = 'link-editor edit-only';
+        p.appendChild(editor);
+      }
+      const stageIds = (p.dataset.stages || '').split(',').filter(Boolean);
+      const solIds = (p.dataset.solutions || '').split(',').filter(Boolean);
+      const stageOptions = stages.filter(s => !stageIds.includes(s.dataset.id));
+      const solOptions = solutions.filter(s => !solIds.includes(s.dataset.id));
+      editor.innerHTML = `
+        <div class="le-row">
+          <div class="le-label">Linked stage(s)</div>
+          <div class="le-chips">
+            ${stageIds.map(id => `<span class="le-chip" data-id="${id}" data-kind="stage">${nameOfNode(id)} <span class="rm" title="Remove">×</span></span>`).join('')}
+            ${stageOptions.length ? `<select class="le-add" data-kind="stage"><option value="">+ stage</option>${stageOptions.map(s => `<option value="${s.dataset.id}">${nameOfNode(s.dataset.id)}</option>`).join('')}</select>` : ''}
+          </div>
+        </div>
+        <div class="le-row">
+          <div class="le-label">Linked solution(s)</div>
+          <div class="le-chips">
+            ${solIds.map(id => `<span class="le-chip" data-id="${id}" data-kind="solution">${nameOfNode(id)} <span class="rm" title="Remove">×</span></span>`).join('')}
+            ${solOptions.length ? `<select class="le-add" data-kind="solution"><option value="">+ solution</option>${solOptions.map(s => `<option value="${s.dataset.id}">${nameOfNode(s.dataset.id)}</option>`).join('')}</select>` : ''}
+          </div>
+        </div>
+      `;
+      editor.querySelectorAll('.rm').forEach(rm => {
+        rm.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const chip = rm.parentElement;
+          const id = chip.dataset.id;
+          const kind = chip.dataset.kind;
+          const attr = kind === 'stage' ? 'stages' : 'solutions';
+          const cur = (p.dataset[attr] || '').split(',').filter(Boolean);
+          p.dataset[attr] = cur.filter(x => x !== id).join(',');
+          rebuildEdges();
+          renderLinkEditor(p);
+          drawLines();
+          applyFilter();
+          persistState();
+        });
+      });
+      editor.querySelectorAll('select.le-add').forEach(sel => {
+        sel.addEventListener('change', (e) => {
+          e.stopPropagation();
+          if (!sel.value) return;
+          const kind = sel.dataset.kind;
+          const attr = kind === 'stage' ? 'stages' : 'solutions';
+          const cur = (p.dataset[attr] || '').split(',').filter(Boolean);
+          cur.push(sel.value);
+          p.dataset[attr] = cur.join(',');
+          rebuildEdges();
+          renderLinkEditor(p);
+          drawLines();
+          applyFilter();
+          persistState();
+        });
+      });
+      // Prevent editor clicks from focusing the parent node
+      editor.addEventListener('click', e => e.stopPropagation());
+    }
+
+    function ensureDragHandle(n) {
+      let h = n.querySelector(':scope > .drag-handle');
+      if (!h) {
+        h = document.createElement('span');
+        h.className = 'drag-handle edit-only';
+        h.textContent = '⋮⋮';
+        h.setAttribute('draggable', 'true');
+        h.setAttribute('title', 'Drag to reorder within this column');
+        n.prepend(h);
+        // Drag events
+        h.addEventListener('dragstart', (e) => {
+          if (!editMode) { e.preventDefault(); return; }
+          draggingNode = n;
+          setTimeout(() => n.classList.add('dragging'), 0);
+          e.dataTransfer.effectAllowed = 'move';
+          try { e.dataTransfer.setData('text/plain', n.dataset.id); } catch {}
+        });
+        h.addEventListener('dragend', () => {
+          if (draggingNode) draggingNode.classList.remove('dragging');
+          draggingNode = null;
+          document.querySelectorAll('.drag-over-top, .drag-over-bot')
+            .forEach(el => el.classList.remove('drag-over-top', 'drag-over-bot'));
+        });
+        // Stop click bubbling to node (prevents focus)
+        h.addEventListener('click', e => e.stopPropagation());
+      }
+    }
+
+    function ensureDeleteBtn(n) {
+      let b = n.querySelector(':scope > .delete-btn');
+      if (!b) {
+        b = document.createElement('button');
+        b.className = 'delete-btn edit-only';
+        b.textContent = '×';
+        b.setAttribute('title', 'Delete this node');
+        n.appendChild(b);
+        b.addEventListener('click', (e) => {
+          if (!editMode) return;
+          e.stopPropagation();
+          deleteNode(n);
+        });
+      }
+    }
+
+    function applyEditableToNode(n) {
+      if (!editMode) return;
+      ['.name', '.detail', '.badge', '.code', '.stat span'].forEach(sel => {
+        n.querySelectorAll(sel).forEach(el => {
+          el.setAttribute('contenteditable', 'true');
+          el.setAttribute('spellcheck', 'false');
+        });
+      });
+    }
+
+    // Attach the same interaction handlers an existing init-time node has
+    // (used for nodes added at runtime via addStage/addProblem/addSolution or restore)
+    function wireNewNode(n) {
+      // Click-to-focus
+      n.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (focused === n) {
+          applyFocus(null);
+          closeDetail();
+        } else {
+          applyFocus(n);
+          openDetail(n);
+        }
+      });
+      // Drag drop target
+      n.addEventListener('dragover', (e) => {
+        if (!editMode || !draggingNode) return;
+        if (n.parentElement !== draggingNode.parentElement) return;
+        if (n === draggingNode) return;
+        e.preventDefault();
+        const r = n.getBoundingClientRect();
+        const middle = r.top + r.height / 2;
+        n.classList.remove('drag-over-top', 'drag-over-bot');
+        if (e.clientY < middle) n.classList.add('drag-over-top');
+        else n.classList.add('drag-over-bot');
+      });
+      n.addEventListener('dragleave', () =>
+        n.classList.remove('drag-over-top', 'drag-over-bot'));
+      n.addEventListener('drop', (e) => {
+        if (!editMode || !draggingNode) return;
+        if (n.parentElement !== draggingNode.parentElement) return;
+        e.preventDefault();
+        const before = n.classList.contains('drag-over-top');
+        n.classList.remove('drag-over-top', 'drag-over-bot');
+        if (before) n.parentElement.insertBefore(draggingNode, n);
+        else n.parentElement.insertBefore(draggingNode, n.nextSibling);
+        drawLines();
+        persistState();
+      });
+      // Priority pill click (for solutions)
+      if (n.classList.contains('solution')) {
+        const pill = n.querySelector('.pri-pill');
+        if (pill) {
+          pill.addEventListener('click', (e) => {
+            if (!editMode) return;
+            e.stopPropagation();
+            cyclePriority(n);
+          });
+        }
+      }
+      // Stop contenteditable clicks from bubbling to node focus
+      ['.name', '.detail', '.badge', '.code', '.stat span'].forEach(sel => {
+        n.querySelectorAll(sel).forEach(el => {
+          el.addEventListener('click', (e) => {
+            if (editMode) e.stopPropagation();
+          });
+        });
+      });
+    }
+
+    // Compute next available "sN" id for new solutions
+    function nextSolutionId() {
+      let n = 1;
+      const used = new Set(solutions.map(s => s.dataset.id));
+      while (used.has('s' + n)) n++;
+      return 's' + n;
+    }
+
+    function insertBeforeAddBtn(col, node) {
+      const addBtn = col.querySelector(':scope > .col-add-btn');
+      if (addBtn) col.insertBefore(node, addBtn);
+      else col.appendChild(node);
+    }
+
+    function addStage() {
+      const id = 'new-stage-' + Date.now();
+      const node = document.createElement('div');
+      node.className = 'node stage';
+      node.dataset.type = 'stage';
+      node.dataset.id = id;
+      node.innerHTML = `
+        <div class="top">
+          <div class="name">New stage</div>
+          <div class="badge">0 stuck</div>
+        </div>
+        <div class="code">EVENT_CODE</div>
+        <div class="stat">
+          <span><b class="pct-big">0%</b> of stuck</span>
+          <span>0 FL · 0 SP</span>
+        </div>
+      `;
+      insertBeforeAddBtn(document.getElementById('col-stages'), node);
+      stages.push(node);
+      allNodes.push(node);
+      wireNewNode(node);
+      if (editMode) {
+        ensureDragHandle(node);
+        ensureDeleteBtn(node);
+        applyEditableToNode(node);
+        problems.forEach(renderLinkEditor); // refresh editors so this stage shows in the "+ stage" dropdown
+      }
+      rebuildEdges();
+      drawLines();
+      applyFilter();
+      persistState();
+    }
+
+    function addProblem() {
+      const id = 'new-problem-' + Date.now();
+      const node = document.createElement('div');
+      node.className = 'node problem';
+      node.dataset.type = 'problem';
+      node.dataset.id = id;
+      node.dataset.stages = '';
+      node.dataset.solutions = '';
+      node.innerHTML = `
+        <div class="top">
+          <div class="name">New problem</div>
+          <div class="badge">~0</div>
+        </div>
+        <div class="detail">Describe the problem here.</div>
+      `;
+      insertBeforeAddBtn(document.getElementById('col-problems'), node);
+      problems.push(node);
+      allNodes.push(node);
+      wireNewNode(node);
+      if (editMode) {
+        ensureDragHandle(node);
+        ensureDeleteBtn(node);
+        renderLinkEditor(node);
+        applyEditableToNode(node);
+      }
+      rebuildEdges();
+      drawLines();
+      applyFilter();
+      persistState();
+    }
+
+    function addSolution() {
+      const id = nextSolutionId();
+      const num = solutions.length + 1;
+      const node = document.createElement('div');
+      node.className = 'node solution P2';
+      node.dataset.type = 'solution';
+      node.dataset.id = id;
+      node.dataset.priority = 'P2';
+      node.innerHTML = `
+        <div class="top">
+          <div class="name">#${num} New solution</div>
+          <span class="pri-pill P2">P2</span>
+        </div>
+        <div class="detail">Describe the solution here.</div>
+        <div class="stat">
+          <span class="lift-pill">+0.0 pp</span>
+          <span>0 / mo · 50% conf.</span>
+        </div>
+      `;
+      insertBeforeAddBtn(document.getElementById('col-solutions'), node);
+      solutions.push(node);
+      allNodes.push(node);
+      wireNewNode(node);
+      if (editMode) {
+        ensureDragHandle(node);
+        ensureDeleteBtn(node);
+        applyEditableToNode(node);
+        problems.forEach(renderLinkEditor); // refresh editors so this solution shows in the "+ solution" dropdown
+      }
+      drawLines();
+      applyFilter();
+      persistState();
+    }
+
+    function deleteNode(node) {
+      const nm = node.querySelector('.name');
+      const label = nm ? nm.textContent.trim() : 'this node';
+      if (!confirm(`Delete "${label}"? This cannot be undone (unless you Reset).`)) return;
+      const id = node.dataset.id;
+      const type = node.dataset.type;
+      // Strip references to this id from any problem's links
+      if (type === 'stage' || type === 'solution') {
+        const attr = type === 'stage' ? 'stages' : 'solutions';
+        problems.forEach(p => {
+          const ids = (p.dataset[attr] || '').split(',').filter(Boolean);
+          const filtered = ids.filter(x => x !== id);
+          if (filtered.length !== ids.length) {
+            p.dataset[attr] = filtered.join(',');
+          }
+        });
+      }
+      // Remove from internal arrays
+      const arr = type === 'stage' ? stages : (type === 'problem' ? problems : solutions);
+      const idx = arr.indexOf(node);
+      if (idx !== -1) arr.splice(idx, 1);
+      const aidx = allNodes.indexOf(node);
+      if (aidx !== -1) allNodes.splice(aidx, 1);
+      // Remove from DOM
+      node.remove();
+      // Refresh link editors so dropdowns reflect removed references
+      if (editMode) problems.forEach(renderLinkEditor);
+      rebuildEdges();
+      drawLines();
+      applyFilter();
+      persistState();
+    }
+
+    // Wire up the "+ Add" buttons at the bottom of each column
+    document.querySelectorAll('.col-add-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const kind = btn.dataset.add;
+        if (kind === 'stage') addStage();
+        else if (kind === 'problem') addProblem();
+        else if (kind === 'solution') addSolution();
+      });
+    });
+
+    let draggingNode = null;
+    allNodes.forEach(n => {
+      n.addEventListener('dragover', (e) => {
+        if (!editMode || !draggingNode) return;
+        if (n.parentElement !== draggingNode.parentElement) return;
+        if (n === draggingNode) return;
+        e.preventDefault();
+        const r = n.getBoundingClientRect();
+        const middle = r.top + r.height / 2;
+        n.classList.remove('drag-over-top', 'drag-over-bot');
+        if (e.clientY < middle) n.classList.add('drag-over-top');
+        else n.classList.add('drag-over-bot');
+      });
+      n.addEventListener('dragleave', () =>
+        n.classList.remove('drag-over-top', 'drag-over-bot'));
+      n.addEventListener('drop', (e) => {
+        if (!editMode || !draggingNode) return;
+        if (n.parentElement !== draggingNode.parentElement) return;
+        e.preventDefault();
+        const before = n.classList.contains('drag-over-top');
+        n.classList.remove('drag-over-top', 'drag-over-bot');
+        if (before) n.parentElement.insertBefore(draggingNode, n);
+        else n.parentElement.insertBefore(draggingNode, n.nextSibling);
+        drawLines();
+        persistState();
+      });
+    });
+
+    // Cycle priority on solution pill click
+    function cyclePriority(solNode) {
+      const order = ['P0', 'P1', 'P2', 'P3'];
+      const cur = solNode.dataset.priority || 'P0';
+      const next = order[(order.indexOf(cur) + 1) % order.length];
+      solNode.dataset.priority = next;
+      order.forEach(p => solNode.classList.remove(p));
+      solNode.classList.add(next);
+      const pill = solNode.querySelector('.pri-pill');
+      if (pill) {
+        order.forEach(p => pill.classList.remove(p));
+        pill.classList.add(next);
+        pill.textContent = next;
+      }
+      applyFilter();
+      drawLines();
+      persistState();
+    }
+    solutions.forEach(s => {
+      const pill = s.querySelector('.pri-pill');
+      if (!pill) return;
+      pill.addEventListener('click', (e) => {
+        if (!editMode) return;
+        e.stopPropagation();
+        cyclePriority(s);
+      });
+    });
+    // Cross-cutting #7 pill (not in flow, but in cross-cutting strip)
+    document.querySelectorAll('.crosscut .pri-pill').forEach(pill => {
+      pill.addEventListener('click', (e) => {
+        if (!editMode) return;
+        e.stopPropagation();
+        const order = ['P0', 'P1', 'P2', 'P3'];
+        const cur = pill.textContent.trim();
+        const next = order[(order.indexOf(cur) + 1) % order.length];
+        order.forEach(p => pill.classList.remove(p));
+        pill.classList.add(next);
+        pill.textContent = next;
+        applyFilter();
+        persistState();
+      });
+    });
+
+    let editMode = false;
+    const editToggle = document.getElementById('edit-toggle');
+
+    function setEditMode(on) {
+      editMode = on;
+      document.body.classList.toggle('edit-mode', on);
+      editToggle.textContent = on ? 'Done editing' : 'Edit mode';
+      editToggle.classList.toggle('active', on);
+
+      // Toggle contenteditable
+      EDITABLE_SELECTORS.forEach(sel => {
+        document.querySelectorAll(sel).forEach(el => {
+          if (on) {
+            el.setAttribute('contenteditable', 'true');
+            el.setAttribute('spellcheck', 'false');
+          } else {
+            el.removeAttribute('contenteditable');
+            el.removeAttribute('spellcheck');
+          }
+        });
+      });
+
+      // Render link editors, drag handles, and delete buttons
+      if (on) {
+        problems.forEach(renderLinkEditor);
+        allNodes.forEach(ensureDragHandle);
+        allNodes.forEach(ensureDeleteBtn);
+      }
+      // Update line positions because padding changes
+      setTimeout(drawLines, 30);
+    }
+
+    editToggle.addEventListener('click', () => setEditMode(!editMode));
+
+    // Persist text edits on blur
+    document.addEventListener('blur', (e) => {
+      if (!editMode) return;
+      const el = e.target;
+      if (!el || !el.hasAttribute) return;
+      if (el.getAttribute && el.getAttribute('contenteditable') === 'true') {
+        persistState();
+        // If a node's .name changed, also refresh any link editor that references it
+        if (el.classList.contains('name')) {
+          problems.forEach(renderLinkEditor);
+          // Refresh detail panel title if currently open and showing this node
+          if (focused && detail.classList.contains('open')) {
+            const t = focused.dataset.type;
+            if (t) {
+              document.getElementById('dp-title').textContent =
+                focused.querySelector('.name').textContent;
+            }
+          }
+        }
+        drawLines();
+      }
+    }, true);
+
+    // Make sure clicks on contenteditable elements DON'T trigger node focus
+    EDITABLE_SELECTORS.forEach(sel => {
+      document.querySelectorAll(sel).forEach(el => {
+        el.addEventListener('click', (e) => {
+          if (editMode) e.stopPropagation();
+        });
+      });
+    });
+
+    // ===== Persistence (localStorage) =====
+    // Diff-based: capture file state on load, save only fields that differ from that baseline.
+    // This way, file updates by the author flow through to the user unless they explicitly
+    // edited that specific field.
+    let BASELINE = null;
+    const FIELD_CLASSES = ['name', 'detail', 'badge', 'code', 'lift-pill'];
+    // Multi-element page-level fields. Each entry captures innerHTML for every matching element,
+    // keyed by `key`, indexed by document order. Used in baseline / persist / restore.
+    const MULTI_PAGE_FIELDS = [
+      { key: 'h1s',          sel: 'h1' },
+      { key: 'ledes',        sel: '.lede' },
+      { key: 'eyebrows',     sel: '.eyebrow' },
+      { key: 'colHeaders',   sel: '.col-header' },
+      { key: 'aggLabels',    sel: '.aggregate .lab' },
+      { key: 'aggValues',    sel: '.aggregate .val' },
+      { key: 'ctxLabels',    sel: '.ctx-label' },
+      { key: 'ctxBody',      sel: '.ctx-body' },
+      { key: 'ctxBignum',    sel: '.ctx-bignum' },
+      { key: 'ctxBigsub',    sel: '.ctx-bigsub' },
+      { key: 'ctxBigfoot',   sel: '.ctx-bigfoot' },
+      { key: 'ctxTableHead', sel: '.ctx-table th' },
+      { key: 'ctxTableCell', sel: '.ctx-table td' },
+      { key: 'ctxNote',      sel: '.ctx-note' },
+      { key: 'ctxMethod',    sel: '.ctx-method li' },
+      { key: 'ctxMetricName', sel: '.ctx-metric .m-name' },
+      { key: 'ctxMetricDef',  sel: '.ctx-metric .m-def' },
+      { key: 'mCur',         sel: '.m-cur' },
+      { key: 'mTgt',         sel: '.m-tgt' },
+      { key: 'ctxGuardText', sel: '.ctx-guardrail .g-text' },
+    ];
+
+    function captureBaseline() {
+      const b = { nodes: {}, order: {}, page: {} };
+
+      allNodes.forEach(n => {
+        const id = n.dataset.id;
+        const entry = {
+          stages: n.dataset.stages || '',
+          solutions: n.dataset.solutions || '',
+          priority: n.dataset.priority || '',
+          fields: {},
+        };
+        FIELD_CLASSES.forEach(cls => {
+          const f = n.querySelector('.' + cls);
+          if (f) entry.fields[cls] = f.innerHTML;
+        });
+        const statSpans = n.querySelectorAll('.stat span');
+        if (statSpans.length) {
+          entry.fields.statSpans = Array.from(statSpans).map(s => s.innerHTML);
+        }
+        b.nodes[id] = entry;
+      });
+
+      ['col-stages', 'col-problems', 'col-solutions'].forEach(colId => {
+        const col = document.getElementById(colId);
+        if (col) b.order[colId] = Array.from(col.querySelectorAll('.node'))
+          .map(n => n.dataset.id);
+      });
+
+      // Notes section is a single element — capture its current innerHTML.
+      const nb = document.querySelector('.crosscut .notes-body');
+      if (nb) b.page.notes = nb.innerHTML;
+
+      // All multi-element page-level fields captured in one loop
+      MULTI_PAGE_FIELDS.forEach(({ key, sel }) => {
+        const els = document.querySelectorAll(sel);
+        if (els.length) b.page[key] = Array.from(els).map(e => e.innerHTML);
+      });
+
+      BASELINE = b;
+    }
+
+    function persistState() {
+      if (!BASELINE) return;
+      const state = { nodes: {}, order: {}, page: {}, addedNodes: [], deletedNodes: [] };
+
+      // Added nodes: in DOM, not in baseline — save full sanitised HTML
+      const baselineIds = new Set(Object.keys(BASELINE.nodes));
+      allNodes.forEach(n => {
+        if (baselineIds.has(n.dataset.id)) return;
+        const clone = n.cloneNode(true);
+        clone.querySelectorAll('.drag-handle, .link-editor, .delete-btn')
+          .forEach(el => el.remove());
+        clone.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
+        clone.querySelectorAll('[spellcheck]').forEach(el => el.removeAttribute('spellcheck'));
+        state.addedNodes.push({
+          id: n.dataset.id,
+          type: n.dataset.type,
+          col: n.parentElement ? n.parentElement.id : null,
+          html: clone.outerHTML,
+        });
+      });
+
+      // Deleted nodes: in baseline, not in DOM
+      const currentIds = new Set(allNodes.map(n => n.dataset.id));
+      baselineIds.forEach(id => {
+        if (!currentIds.has(id)) state.deletedNodes.push(id);
+      });
+
+      // Per-node deltas (only nodes that exist in both baseline and DOM)
+      allNodes.forEach(n => {
+        const id = n.dataset.id;
+        const base = BASELINE.nodes[id];
+        if (!base) return; // added nodes handled above
+        const entry = {};
+        if ((n.dataset.stages || '') !== base.stages) entry.stages = n.dataset.stages || '';
+        if ((n.dataset.solutions || '') !== base.solutions) entry.solutions = n.dataset.solutions || '';
+        if ((n.dataset.priority || '') !== base.priority) entry.priority = n.dataset.priority || '';
+
+        const fieldDiff = {};
+        FIELD_CLASSES.forEach(cls => {
+          const f = n.querySelector('.' + cls);
+          if (f && base.fields[cls] !== undefined && f.innerHTML !== base.fields[cls]) {
+            fieldDiff[cls] = f.innerHTML;
+          }
+        });
+        const statSpans = n.querySelectorAll('.stat span');
+        if (statSpans.length && Array.isArray(base.fields.statSpans)) {
+          const cur = Array.from(statSpans).map(s => s.innerHTML);
+          const diffSpans = cur.map((html, i) =>
+            html !== base.fields.statSpans[i] ? html : null);
+          if (diffSpans.some(x => x !== null)) fieldDiff.statSpans = diffSpans;
+        }
+        if (Object.keys(fieldDiff).length > 0) entry.fields = fieldDiff;
+
+        if (Object.keys(entry).length > 0) state.nodes[id] = entry;
+      });
+
+      // Column order deltas
+      ['col-stages', 'col-problems', 'col-solutions'].forEach(colId => {
+        const col = document.getElementById(colId);
+        if (!col || !BASELINE.order[colId]) return;
+        const cur = Array.from(col.querySelectorAll('.node')).map(n => n.dataset.id);
+        if (cur.join(',') !== BASELINE.order[colId].join(',')) {
+          state.order[colId] = cur;
+        }
+      });
+
+      // Page-level: notes is a single-element field
+      const nb = document.querySelector('.crosscut .notes-body');
+      if (nb && nb.innerHTML !== BASELINE.page.notes) state.page.notes = nb.innerHTML;
+
+      // All multi-element page-level deltas in one loop
+      MULTI_PAGE_FIELDS.forEach(({ key, sel }) => {
+        const baseArr = BASELINE.page[key];
+        if (!Array.isArray(baseArr)) return;
+        const els = document.querySelectorAll(sel);
+        if (!els.length) return;
+        const cur = Array.from(els).map(e => e.innerHTML);
+        const diff = cur.map((html, i) => html !== baseArr[i] ? html : null);
+        if (diff.some(x => x !== null)) state.page[key] = diff;
+      });
+
+      // Strip empty containers so the JSON is small and clear
+      if (Object.keys(state.nodes).length === 0) delete state.nodes;
+      if (Object.keys(state.order).length === 0) delete state.order;
+      if (Object.keys(state.page).length === 0) delete state.page;
+      if (state.addedNodes.length === 0) delete state.addedNodes;
+      if (state.deletedNodes.length === 0) delete state.deletedNodes;
+
+      try {
+        if (Object.keys(state).length === 0) {
+          localStorage.removeItem(STORAGE_KEY);
+        } else {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        }
+      } catch (e) { console.warn('persist failed', e); }
+    }
+
+    function restoreState() {
+      let raw;
+      try { raw = localStorage.getItem(STORAGE_KEY); } catch { return; }
+      if (!raw) return;
+      let state;
+      try { state = JSON.parse(raw); } catch { return; }
+
+      // Legacy migration: old saves used singular `h1` / `lede` strings — now we use plural arrays
+      if (state.page) {
+        if (typeof state.page.h1 === 'string') {
+          state.page.h1s = state.page.h1s || [state.page.h1];
+          delete state.page.h1;
+        }
+        if (typeof state.page.lede === 'string') {
+          state.page.ledes = state.page.ledes || [state.page.lede];
+          delete state.page.lede;
+        }
+      }
+
+      // Apply deletions FIRST (so we don't waste time diffing nodes about to be removed)
+      (state.deletedNodes || []).forEach(id => {
+        const n = nodeById(id);
+        if (!n) return;
+        // Clean references in problems
+        problems.forEach(p => {
+          ['stages', 'solutions'].forEach(attr => {
+            const ids = (p.dataset[attr] || '').split(',').filter(Boolean);
+            const filtered = ids.filter(x => x !== id);
+            if (filtered.length !== ids.length) p.dataset[attr] = filtered.join(',');
+          });
+        });
+        // Remove from arrays
+        [stages, problems, solutions, allNodes].forEach(arr => {
+          const idx = arr.indexOf(n);
+          if (idx !== -1) arr.splice(idx, 1);
+        });
+        n.remove();
+      });
+
+      // Apply additions SECOND (so the new nodes participate in subsequent diff restores)
+      (state.addedNodes || []).forEach(({ id, type, col, html }) => {
+        const colEl = col ? document.getElementById(col) : null;
+        if (!colEl) return;
+        const tmpl = document.createElement('template');
+        tmpl.innerHTML = (html || '').trim();
+        const node = tmpl.content.firstElementChild;
+        if (!node) return;
+        // Ensure id matches (just in case)
+        if (id) node.dataset.id = id;
+        insertBeforeAddBtn(colEl, node);
+        const arr = type === 'stage' ? stages : (type === 'problem' ? problems : solutions);
+        arr.push(node);
+        allNodes.push(node);
+        wireNewNode(node);
+      });
+
+      // Restore per-node deltas
+      Object.entries(state.nodes || {}).forEach(([id, data]) => {
+        const n = nodeById(id);
+        if (!n) return; // node was deleted from file since user saved
+        if (data.stages !== undefined) n.dataset.stages = data.stages;
+        if (data.solutions !== undefined) n.dataset.solutions = data.solutions;
+        if (data.priority) {
+          n.dataset.priority = data.priority;
+          ['P0','P1','P2','P3'].forEach(p => n.classList.remove(p));
+          n.classList.add(data.priority);
+          const pill = n.querySelector('.pri-pill');
+          if (pill) {
+            ['P0','P1','P2','P3'].forEach(p => pill.classList.remove(p));
+            pill.classList.add(data.priority);
+            pill.textContent = data.priority;
+          }
+        }
+        if (data.fields) {
+          FIELD_CLASSES.forEach(cls => {
+            if (data.fields[cls] != null) {
+              const f = n.querySelector('.' + cls);
+              if (f) f.innerHTML = data.fields[cls];
+            }
+          });
+          if (Array.isArray(data.fields.statSpans)) {
+            const statSpans = n.querySelectorAll('.stat span');
+            data.fields.statSpans.forEach((html, i) => {
+              if (html != null && statSpans[i]) statSpans[i].innerHTML = html;
+            });
+          }
+        }
+      });
+
+      // Restore column orders
+      Object.entries(state.order || {}).forEach(([colId, ids]) => {
+        const col = document.getElementById(colId);
+        if (!col) return;
+        ids.forEach(id => {
+          const n = col.querySelector(`.node[data-id="${id}"]`);
+          if (n) col.appendChild(n);
+        });
+      });
+
+      // Restore page-level deltas
+      if (state.page) {
+        // Notes section (single element)
+        if (state.page.notes != null) {
+          const nb = document.querySelector('.crosscut .notes-body');
+          if (nb) nb.innerHTML = state.page.notes;
+        }
+        // All multi-element page-level fields in one loop
+        MULTI_PAGE_FIELDS.forEach(({ key, sel }) => {
+          if (!Array.isArray(state.page[key])) return;
+          const els = document.querySelectorAll(sel);
+          state.page[key].forEach((html, i) => {
+            if (html != null && els[i]) els[i].innerHTML = html;
+          });
+        });
+      }
+
+      rebuildEdges();
+    }
+
+    // ===== Download HTML (current edited state) =====
+    document.getElementById('export-btn').addEventListener('click', () => {
+      const cloneDoc = document.documentElement.cloneNode(true);
+      // Strip edit chrome
+      cloneDoc.querySelectorAll('.drag-handle, .link-editor').forEach(el => el.remove());
+      cloneDoc.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
+      cloneDoc.querySelectorAll('[spellcheck]').forEach(el => el.removeAttribute('spellcheck'));
+      const body = cloneDoc.querySelector('body');
+      if (body) body.classList.remove('edit-mode');
+      // Drop dynamic SVG content (will be redrawn on load)
+      const sv = cloneDoc.querySelector('#lines');
+      if (sv) sv.innerHTML = '';
+      const html = '<!DOCTYPE html>\n' + cloneDoc.outerHTML;
+      const blob = new Blob([html], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'onboarding-flowchart-edited.html';
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    });
+
+    // ===== Reset =====
+    document.getElementById('reset-btn').addEventListener('click', () => {
+      if (!confirm('Reset all edits? This clears saved changes and reloads the page.')) return;
+      try { localStorage.removeItem(STORAGE_KEY); } catch {}
+      location.reload();
+    });
+
+    // Tab switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const name = btn.dataset.tab;
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b === btn));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('hidden', p.id !== 'tab-' + name));
+        // SVG lines need recalculation once the flow becomes visible
+        if (name === 'flowchart') setTimeout(drawLines, 60);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+
+    // Capture file baseline BEFORE applying any saved user edits
+    captureBaseline();
+    // Apply saved edits (as diffs vs baseline)
+    restoreState();
+    applyFilter();
+    setTimeout(drawLines, 60);
+  </script>
+
+
+</body></html>
