@@ -652,6 +652,9 @@
     }
     .mode-btn.danger { color: var(--red); border-color: var(--red-bg); }
     .mode-btn.danger:hover { background: var(--red-bg); }
+    .mode-btn.success { color: var(--accent); border-color: var(--accent-bg); }
+    .mode-btn.success:hover { background: var(--accent-bg); }
+    .mode-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
     .edit-only { display: none !important; }
     body.edit-mode .edit-only { display: inline-flex !important; }
@@ -1052,6 +1055,7 @@
       <div class="mode-buttons">
         <button class="mode-btn primary" id="edit-toggle">Edit mode</button>
         <button class="mode-btn" id="export-btn">Download HTML</button>
+        <button class="mode-btn success" id="push-btn">Push to GitHub</button>
         <button class="mode-btn danger" id="reset-btn">Reset</button>
       </div>
     </nav>
@@ -2699,6 +2703,117 @@
       a.download = 'onboarding-flowchart-edited.html';
       a.click();
       setTimeout(() => URL.revokeObjectURL(url), 1000);
+    });
+
+    // ===== Push to GitHub =====
+    document.getElementById('push-btn').addEventListener('click', async () => {
+      const pwd = prompt('Enter password to push to GitHub:');
+      if (pwd === null) return;
+      if (pwd !== EDIT_PASSWORD) {
+        alert('Incorrect password.');
+        return;
+      }
+
+      const TOKEN_KEY = 'gh-pat';
+      const REPO = 'jn-atishay/onboarding-flowchart';
+      const FILE_PATH = 'index.html';
+      const BRANCH = 'main';
+
+      let token = localStorage.getItem(TOKEN_KEY);
+      if (!token) {
+        token = prompt(
+          'No GitHub token saved on this browser.\n\n' +
+          'Create one (60s):\n' +
+          '1. Open https://github.com/settings/personal-access-tokens/new\n' +
+          '2. Repository access → Only select repositories → onboarding-flowchart\n' +
+          '3. Permissions → Repository permissions → Contents: Read and write\n' +
+          '4. Generate, copy the token, paste it below.\n\n' +
+          'The token is saved in this browser only (localStorage). It is never uploaded anywhere except GitHub.'
+        );
+        if (!token) return;
+        token = token.trim();
+        if (!token) return;
+        localStorage.setItem(TOKEN_KEY, token);
+      }
+
+      const btn = document.getElementById('push-btn');
+      const orig = btn.textContent;
+      btn.textContent = 'Pushing…';
+      btn.disabled = true;
+
+      const fail = (msg) => {
+        alert('Push failed: ' + msg);
+        btn.textContent = orig;
+        btn.disabled = false;
+      };
+      const maybeForgetToken = (status) => {
+        if (status === 401 || status === 403) {
+          if (confirm('GitHub rejected the token. Forget the saved token so you can paste a new one?')) {
+            localStorage.removeItem(TOKEN_KEY);
+          }
+        }
+      };
+
+      try {
+        // Build clean HTML (mirrors Download HTML)
+        const cloneDoc = document.documentElement.cloneNode(true);
+        cloneDoc.querySelectorAll('.drag-handle, .link-editor').forEach(el => el.remove());
+        cloneDoc.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
+        cloneDoc.querySelectorAll('[spellcheck]').forEach(el => el.removeAttribute('spellcheck'));
+        const body = cloneDoc.querySelector('body');
+        if (body) body.classList.remove('edit-mode');
+        const sv = cloneDoc.querySelector('#lines');
+        if (sv) sv.innerHTML = '';
+        const html = '<!DOCTYPE html>\n' + cloneDoc.outerHTML;
+
+        // UTF-8 → base64 (chunked, to handle non-ASCII safely)
+        const utf8 = new TextEncoder().encode(html);
+        let binary = '';
+        const chunk = 0x8000;
+        for (let i = 0; i < utf8.length; i += chunk) {
+          binary += String.fromCharCode.apply(null, utf8.subarray(i, i + chunk));
+        }
+        const b64 = btoa(binary);
+
+        // Get current file SHA
+        const getRes = await fetch(
+          `https://api.github.com/repos/${REPO}/contents/${FILE_PATH}?ref=${BRANCH}`,
+          { headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json' } }
+        );
+        if (!getRes.ok) {
+          maybeForgetToken(getRes.status);
+          return fail(`could not read current file (HTTP ${getRes.status})`);
+        }
+        const cur = await getRes.json();
+
+        // PUT new content
+        const ts = new Date().toLocaleString();
+        const putRes = await fetch(
+          `https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`,
+          {
+            method: 'PUT',
+            headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json' },
+            body: JSON.stringify({
+              message: `Update flowchart (in-browser push @ ${ts})`,
+              content: b64,
+              sha: cur.sha,
+              branch: BRANCH
+            })
+          }
+        );
+        if (!putRes.ok) {
+          maybeForgetToken(putRes.status);
+          const txt = await putRes.text();
+          return fail(`HTTP ${putRes.status} — ${txt.slice(0, 200)}`);
+        }
+
+        btn.textContent = '✓ Pushed';
+        alert('Pushed to GitHub.\n\nThe live page will rebuild in ~30–60s. Hard-refresh after that to see the update.');
+        setTimeout(() => { btn.textContent = orig; btn.disabled = false; }, 3000);
+      } catch (e) {
+        console.error(e);
+        fail(e.message || String(e));
+      }
     });
 
     // ===== Reset =====
