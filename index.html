@@ -2200,7 +2200,22 @@
       setTimeout(drawLines, 30);
     }
 
-    editToggle.addEventListener('click', () => setEditMode(!editMode));
+    const EDIT_PASSWORD = 'AtishayOB123';
+    let editUnlocked = sessionStorage.getItem('edit-unlocked') === '1';
+
+    editToggle.addEventListener('click', () => {
+      if (!editMode && !editUnlocked) {
+        const entered = prompt('Enter password to enable Edit mode:');
+        if (entered === null) return;
+        if (entered !== EDIT_PASSWORD) {
+          alert('Incorrect password.');
+          return;
+        }
+        editUnlocked = true;
+        sessionStorage.setItem('edit-unlocked', '1');
+      }
+      setEditMode(!editMode);
+    });
 
     // Persist text edits on blur
     document.addEventListener('blur', (e) => {
