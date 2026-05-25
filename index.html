@@ -459,6 +459,27 @@
     .pri-pill.P2 { background: var(--accent-bg); color: var(--accent); }
     .pri-pill.P3 { background: var(--grey-bg); color: var(--grey); }
 
+    /* Severity pill (problems) */
+    .problem-meta { margin-bottom: 6px; }
+    .sev-pill {
+      display: inline-block;
+      padding: 2px 9px;
+      border-radius: 100px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .sev-pill.sev-high   { background: var(--red-bg);   color: var(--red); }
+    .sev-pill.sev-medium { background: var(--amber-bg); color: var(--amber); }
+    .sev-pill.sev-low    { background: var(--grey-bg);  color: var(--grey); }
+    body.edit-mode .node.problem .sev-pill { cursor: pointer; }
+    body.edit-mode .node.problem .sev-pill:hover {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
     .lift-pill {
       display: inline-block;
       padding: 2px 9px;
@@ -1151,49 +1172,57 @@
         
 
         <button class="col-add-btn" data-add="problem">+ Add problem</button>
-      <div class="node problem" data-type="problem" data-id="not-ready" data-stages="signup" data-solutions="s8,s10">
+      <div class="node problem" data-type="problem" data-id="not-ready" data-stages="signup" data-solutions="s8,s10" data-severity="Medium">
+          <div class="problem-meta"><span class="sev-pill sev-medium" contenteditable="false">Medium</span></div>
           <div class="top">
             <div class="name">Not ready yet</div>
             <div class="badge">~28</div>
           </div>
           <div class="detail">First international payment is at least a month away. Some were just exploring Skydo and were relatively low intent.&nbsp;</div>
-        <button class="delete-btn edit-only" title="Delete this node">×</button></div><div class="node problem" data-type="problem" data-id="form-friction" data-stages="business" data-solutions="s2,s7">
+        <button class="delete-btn edit-only" title="Delete this node">×</button></div><div class="node problem" data-type="problem" data-id="form-friction" data-stages="business" data-solutions="s2,s7" data-severity="Medium">
+          <div class="problem-meta"><span class="sev-pill sev-medium" contenteditable="false">Medium</span></div>
           <div class="top">
             <div class="name">Business-details form friction</div>
             <div class="badge">~40</div>
           </div>
           <div class="detail">Confusing industry dropdown, 100-character description is confusing, too many questions on one screen, lead-qual fields not necessarily needed for compliance.</div>
-        <button class="delete-btn edit-only" title="Delete this node">×</button></div><div class="node problem" data-type="problem" data-id="anticipating" data-stages="business" data-solutions="s2,s6,s8">
+        <button class="delete-btn edit-only" title="Delete this node">×</button></div><div class="node problem" data-type="problem" data-id="anticipating" data-stages="business" data-solutions="s2,s6,s8" data-severity="Medium">
+          <div class="problem-meta"><span class="sev-pill sev-medium" contenteditable="false">Medium</span></div>
           <div class="top">
             <div class="name">Need more information on Skydo</div>
             <div class="badge">~34</div>
           </div>
           <div class="detail">These are users who need more information or conviction on Skydo before providing their personal details.&nbsp;<div>Themes: "What exactly does Skydo do?", "Are there any account opening charges?" "let me check with my CA".&nbsp;</div><div>The form seems high commitment.</div></div>
-        <button class="delete-btn edit-only" title="Delete this node">×</button></div><div class="node problem" data-type="problem" data-id="id-fails" data-stages="aadhaar" data-solutions="s5">
+        <button class="delete-btn edit-only" title="Delete this node">×</button></div><div class="node problem" data-type="problem" data-id="id-fails" data-stages="aadhaar" data-solutions="s5" data-severity="Medium">
+          <div class="problem-meta"><span class="sev-pill sev-medium" contenteditable="false">Medium</span></div>
           <div class="top">
             <div class="name">Digilocker intermittent failures</div>
             <div class="badge">~23</div>
           </div>
           <div class="detail">DigiLocker times out, OTP doesn't arrive, or Aadhaar is linked to an old mobile. No fallback shown currently, user retries 2–3 times and drops off.</div>
-        <button class="delete-btn edit-only" title="Delete this node">×</button></div><div class="node problem" data-type="problem" data-id="no-intl-txns" data-stages="docupload" data-solutions="s1,s4,s8">
+        <button class="delete-btn edit-only" title="Delete this node">×</button></div><div class="node problem" data-type="problem" data-id="no-intl-txns" data-stages="docupload" data-solutions="s1,s4,s8" data-severity="Medium">
+          <div class="problem-meta"><span class="sev-pill sev-medium" contenteditable="false">Medium</span></div>
           <div class="top">
             <div class="name">Bank statement gpt parser fails, alt-doc path is not visible / not clearly explained</div>
             <div class="badge">~60</div>
           </div>
           <div class="detail">70% of ICP Freelancers try uploading a bank statement -&nbsp;<div>The GPT parser auto-verifies 411 of 757 freelancer bank-statement uploads (54%); 346 (46%) fail.&nbsp;<div>Alternative docs work in these cases — every one of the 346 onboarded via platform screenshots, contracts, or invoices.&nbsp;</div><div>Main problem - sales led discovery is currently the default way users understand the alternate document flow.</div></div></div>
-        <button class="delete-btn edit-only" title="Delete this node">×</button></div><div class="node problem" data-type="problem" data-id="sp-declaration" data-stages="docupload" data-solutions="s3">
+        <button class="delete-btn edit-only" title="Delete this node">×</button></div><div class="node problem" data-type="problem" data-id="sp-declaration" data-stages="docupload" data-solutions="s3" data-severity="Medium">
+          <div class="problem-meta"><span class="sev-pill sev-medium" contenteditable="false">Medium</span></div>
           <div class="top">
             <div class="name">Some Sole Props with GST and IEC are still stuck at Doc Upload</div>
             <div class="badge">~27</div>
           </div>
           <div class="detail">Sole props with GST + IEC can directly onboard without any docs, we show them the SP FL question + doc upload when we are unable to retrieve either one othe above docs.<div>Sales primarily helps through manual override or ask them to upload physical copies of GST / IEC</div></div>
-        <button class="delete-btn edit-only" title="Delete this node">×</button></div><div class="node problem" data-type="problem" data-id="registration-pending" data-stages="docupload" data-solutions="s6,s4,s11">
+        <button class="delete-btn edit-only" title="Delete this node">×</button></div><div class="node problem" data-type="problem" data-id="registration-pending" data-stages="docupload" data-solutions="s6,s4,s11" data-severity="Medium">
+          <div class="problem-meta"><span class="sev-pill sev-medium" contenteditable="false">Medium</span></div>
           <div class="top">
             <div class="name">SoleProp FL question - Govt doc issues - Manual override</div>
             <div class="badge">~33</div>
           </div>
           <div class="detail"><div>Sales Assisted</div><div><span style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif;">S-&gt; FP = 22 ICPs per month&nbsp;</span></div><div>FP -&gt; S = 9 ICPs per month</div><div><br></div><div>Other Manual Override</div>~20% combined issues at doc-upload step. Udyam pending, IEC under reactivation, GST name mismatch, current account not yet open. Funnel errors out with a generic message.<div>Sales helps these cases primarily through manual override</div></div>
-        <button class="delete-btn edit-only" title="Delete this node">×</button></div><div class="node problem" data-type="problem" data-id="nda-trust" data-stages="docupload" data-solutions="s9">
+        <button class="delete-btn edit-only" title="Delete this node">×</button></div><div class="node problem" data-type="problem" data-id="nda-trust" data-stages="docupload" data-solutions="s9" data-severity="Medium">
+          <div class="problem-meta"><span class="sev-pill sev-medium" contenteditable="false">Medium</span></div>
           <div class="top">
             <div class="name">FL: NDA / contract sharing hesitation</div>
             <div class="badge">~11</div>
@@ -1996,6 +2025,17 @@
           });
         }
       }
+      // Severity pill click (for problems)
+      if (n.classList.contains('problem')) {
+        const sevPill = n.querySelector('.sev-pill');
+        if (sevPill) {
+          sevPill.addEventListener('click', (e) => {
+            if (!editMode) return;
+            e.stopPropagation();
+            cycleSeverity(n);
+          });
+        }
+      }
       // Stop contenteditable clicks from bubbling to node focus
       ['.name', '.detail', '.badge', '.code', '.stat span'].forEach(sel => {
         n.querySelectorAll(sel).forEach(el => {
@@ -2061,7 +2101,9 @@
       node.dataset.id = id;
       node.dataset.stages = '';
       node.dataset.solutions = '';
+      node.dataset.severity = 'Medium';
       node.innerHTML = `
+        <div class="problem-meta"><span class="sev-pill sev-medium" contenteditable="false">Medium</span></div>
         <div class="top">
           <div class="name">New problem</div>
           <div class="badge">~0</div>
@@ -2217,6 +2259,30 @@
         cyclePriority(s);
       });
     });
+
+    // Cycle severity on problem pill click
+    function cycleSeverity(probNode) {
+      const order = ['High', 'Medium', 'Low'];
+      const cur = probNode.dataset.severity || 'Medium';
+      const next = order[(order.indexOf(cur) + 1) % order.length];
+      probNode.dataset.severity = next;
+      const pill = probNode.querySelector('.sev-pill');
+      if (pill) {
+        ['sev-high', 'sev-medium', 'sev-low'].forEach(c => pill.classList.remove(c));
+        pill.classList.add('sev-' + next.toLowerCase());
+        pill.textContent = next;
+      }
+      persistState();
+    }
+    problems.forEach(p => {
+      const pill = p.querySelector('.sev-pill');
+      if (!pill) return;
+      pill.addEventListener('click', (e) => {
+        if (!editMode) return;
+        e.stopPropagation();
+        cycleSeverity(p);
+      });
+    });
     // Cross-cutting #7 pill (not in flow, but in cross-cutting strip)
     document.querySelectorAll('.crosscut .pri-pill').forEach(pill => {
       pill.addEventListener('click', (e) => {
@@ -2354,6 +2420,7 @@
           stages: n.dataset.stages || '',
           solutions: n.dataset.solutions || '',
           priority: n.dataset.priority || '',
+          severity: n.dataset.severity || '',
           fields: {},
         };
         FIELD_CLASSES.forEach(cls => {
@@ -2422,6 +2489,7 @@
         if ((n.dataset.stages || '') !== base.stages) entry.stages = n.dataset.stages || '';
         if ((n.dataset.solutions || '') !== base.solutions) entry.solutions = n.dataset.solutions || '';
         if ((n.dataset.priority || '') !== base.priority) entry.priority = n.dataset.priority || '';
+        if ((n.dataset.severity || '') !== base.severity) entry.severity = n.dataset.severity || '';
 
         const fieldDiff = {};
         FIELD_CLASSES.forEach(cls => {
@@ -2554,6 +2622,15 @@
             ['P0','P1','P2','P3'].forEach(p => pill.classList.remove(p));
             pill.classList.add(data.priority);
             pill.textContent = data.priority;
+          }
+        }
+        if (data.severity) {
+          n.dataset.severity = data.severity;
+          const sevPill = n.querySelector('.sev-pill');
+          if (sevPill) {
+            ['sev-high','sev-medium','sev-low'].forEach(c => sevPill.classList.remove(c));
+            sevPill.classList.add('sev-' + data.severity.toLowerCase());
+            sevPill.textContent = data.severity;
           }
         }
         if (data.fields) {
