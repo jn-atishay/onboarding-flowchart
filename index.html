@@ -2,7 +2,7 @@
 <html lang="en"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="code-version" content="v3-action-items-tab">
+  <meta name="code-version" content="v4-ai-add-delete">
   <title>Direct onboarding — problems &amp; solutions flowchart</title>
   <style>
     :root {
@@ -1102,6 +1102,74 @@
       padding: 20px 22px;
       box-shadow: var(--shadow-sm);
       scroll-margin-top: 80px;
+      position: relative;
+    }
+    .ai-card-del {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 24px;
+      height: 24px;
+      border-radius: 100px;
+      background: var(--red-bg);
+      color: var(--red);
+      border: 1px solid var(--red);
+      font: inherit;
+      font-size: 14px;
+      font-weight: 800;
+      line-height: 1;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      z-index: 3;
+      display: none;
+    }
+    body.edit-mode .ai-card-del { display: inline-flex; }
+    .ai-card-del:hover { background: var(--red); color: white; }
+
+    .ai-summary-table .ai-row-del-cell { width: 28px; padding-right: 6px; }
+    .ai-row-del {
+      display: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 100px;
+      background: var(--red-bg);
+      color: var(--red);
+      border: 1px solid var(--red);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0;
+      align-items: center;
+      justify-content: center;
+    }
+    body.edit-mode .ai-row-del { display: inline-flex; }
+    .ai-row-del:hover { background: var(--red); color: white; }
+
+    .ai-add-btn {
+      display: none;
+      width: 100%;
+      background: transparent;
+      border: 1px dashed var(--border-strong);
+      color: var(--ink-faint);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 12px 18px;
+      border-radius: 12px;
+      cursor: pointer;
+      margin-top: 12px;
+      text-align: center;
+      transition: all 0.15s ease;
+    }
+    body.edit-mode .ai-add-btn { display: block; }
+    .ai-add-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-bg);
     }
     .ai-card-head {
       display: flex;
@@ -1732,20 +1800,21 @@
             <tr><th>#</th><th>Task</th><th>Priority</th><th>Stage</th><th>Reach / mo</th><th>Est. lift</th><th>Confidence</th></tr>
           </thead>
           <tbody>
-            <tr><td><a href="#ai-T1">T1</a></td><td class="ai-row-title">Freelancer alternative-document flow</td><td class="ai-row-pri">P0</td><td class="ai-row-stage">Document upload</td><td class="ai-row-reach">93</td><td class="ai-row-lift">+4.1 pp</td><td class="ai-row-conf">70%</td></tr>
-            <tr><td><a href="#ai-T2">T2</a></td><td class="ai-row-title">Business details form fixes</td><td class="ai-row-pri">P0</td><td class="ai-row-stage">Business details</td><td class="ai-row-reach">74</td><td class="ai-row-lift">+3.2 pp</td><td class="ai-row-conf">70%</td></tr>
-            <tr><td><a href="#ai-T3">T3</a></td><td class="ai-row-title">Inline Skydo info and trust building</td><td class="ai-row-pri">P1</td><td class="ai-row-stage">Sign-up / business details</td><td class="ai-row-reach">15</td><td class="ai-row-lift">+1.0 pp</td><td class="ai-row-conf">50%</td></tr>
-            <tr><td><a href="#ai-T4">T4</a></td><td class="ai-row-title">Sole-prop fast-forward (GST + IEC declaration)</td><td class="ai-row-pri">P1</td><td class="ai-row-stage">Document upload</td><td class="ai-row-reach">27 SP</td><td class="ai-row-lift">+1.2 pp</td><td class="ai-row-conf">70%</td></tr>
-            <tr><td><a href="#ai-T5">T5</a></td><td class="ai-row-title">Document readiness checklist</td><td class="ai-row-pri">P1</td><td class="ai-row-stage">Pre-PAN / document upload</td><td class="ai-row-reach">35-45</td><td class="ai-row-lift">+1.8 pp</td><td class="ai-row-conf">70%</td></tr>
-            <tr><td><a href="#ai-T6">T6</a></td><td class="ai-row-title">Revamp or remove the Sole Prop / Freelancer question</td><td class="ai-row-pri">P1</td><td class="ai-row-stage">Document upload</td><td class="ai-row-reach">33</td><td class="ai-row-lift">+1.0 pp</td><td class="ai-row-conf">50%</td></tr>
-            <tr><td><a href="#ai-T7">T7</a></td><td class="ai-row-title">DigiLocker fallback path</td><td class="ai-row-pri">P1</td><td class="ai-row-stage">Aadhaar / DigiLocker</td><td class="ai-row-reach">23</td><td class="ai-row-lift">+1.0 pp</td><td class="ai-row-conf">70%</td></tr>
-            <tr><td><a href="#ai-T8">T8</a></td><td class="ai-row-title">Registration-pending state</td><td class="ai-row-pri">P2</td><td class="ai-row-stage">Document upload</td><td class="ai-row-reach">35-45</td><td class="ai-row-lift">+1.3 pp</td><td class="ai-row-conf">50%</td></tr>
-            <tr><td><a href="#ai-T9">T9</a></td><td class="ai-row-title">Awaiting-first-payment nudge</td><td class="ai-row-pri">P2</td><td class="ai-row-stage">Sign-up / business details</td><td class="ai-row-reach">~60</td><td class="ai-row-lift">+0.8 pp</td><td class="ai-row-conf">20%</td></tr>
-            <tr><td><a href="#ai-T10">T10</a></td><td class="ai-row-title">IEC reactivation guide</td><td class="ai-row-pri">P2</td><td class="ai-row-stage">Document upload</td><td class="ai-row-reach">10</td><td class="ai-row-lift">+0.5 pp</td><td class="ai-row-conf">50%</td></tr>
-            <tr><td><a href="#ai-T11">T11</a></td><td class="ai-row-title">Contract / NDA trust signal</td><td class="ai-row-pri">P3</td><td class="ai-row-stage">Document upload</td><td class="ai-row-reach">8-10 FL</td><td class="ai-row-lift">+0.3 pp</td><td class="ai-row-conf">50%</td></tr>
-            <tr><td><a href="#ai-T12">T12</a></td><td class="ai-row-title">Pre-PAN trust section and savings calculator</td><td class="ai-row-pri">P3</td><td class="ai-row-stage">Sign-up</td><td class="ai-row-reach">20-22</td><td class="ai-row-lift">+0.3 pp</td><td class="ai-row-conf">20%</td></tr>
+            <tr data-row-id="row-T1"><td><a href="#ai-T1">T1</a></td><td class="ai-row-title">Freelancer alternative-document flow</td><td class="ai-row-pri">P0</td><td class="ai-row-stage">Document upload</td><td class="ai-row-reach">93</td><td class="ai-row-lift">+4.1 pp</td><td class="ai-row-conf">70%</td></tr>
+            <tr data-row-id="row-T2"><td><a href="#ai-T2">T2</a></td><td class="ai-row-title">Business details form fixes</td><td class="ai-row-pri">P0</td><td class="ai-row-stage">Business details</td><td class="ai-row-reach">74</td><td class="ai-row-lift">+3.2 pp</td><td class="ai-row-conf">70%</td></tr>
+            <tr data-row-id="row-T3"><td><a href="#ai-T3">T3</a></td><td class="ai-row-title">Inline Skydo info and trust building</td><td class="ai-row-pri">P1</td><td class="ai-row-stage">Sign-up / business details</td><td class="ai-row-reach">15</td><td class="ai-row-lift">+1.0 pp</td><td class="ai-row-conf">50%</td></tr>
+            <tr data-row-id="row-T4"><td><a href="#ai-T4">T4</a></td><td class="ai-row-title">Sole-prop fast-forward (GST + IEC declaration)</td><td class="ai-row-pri">P1</td><td class="ai-row-stage">Document upload</td><td class="ai-row-reach">27 SP</td><td class="ai-row-lift">+1.2 pp</td><td class="ai-row-conf">70%</td></tr>
+            <tr data-row-id="row-T5"><td><a href="#ai-T5">T5</a></td><td class="ai-row-title">Document readiness checklist</td><td class="ai-row-pri">P1</td><td class="ai-row-stage">Pre-PAN / document upload</td><td class="ai-row-reach">35-45</td><td class="ai-row-lift">+1.8 pp</td><td class="ai-row-conf">70%</td></tr>
+            <tr data-row-id="row-T6"><td><a href="#ai-T6">T6</a></td><td class="ai-row-title">Revamp or remove the Sole Prop / Freelancer question</td><td class="ai-row-pri">P1</td><td class="ai-row-stage">Document upload</td><td class="ai-row-reach">33</td><td class="ai-row-lift">+1.0 pp</td><td class="ai-row-conf">50%</td></tr>
+            <tr data-row-id="row-T7"><td><a href="#ai-T7">T7</a></td><td class="ai-row-title">DigiLocker fallback path</td><td class="ai-row-pri">P1</td><td class="ai-row-stage">Aadhaar / DigiLocker</td><td class="ai-row-reach">23</td><td class="ai-row-lift">+1.0 pp</td><td class="ai-row-conf">70%</td></tr>
+            <tr data-row-id="row-T8"><td><a href="#ai-T8">T8</a></td><td class="ai-row-title">Registration-pending state</td><td class="ai-row-pri">P2</td><td class="ai-row-stage">Document upload</td><td class="ai-row-reach">35-45</td><td class="ai-row-lift">+1.3 pp</td><td class="ai-row-conf">50%</td></tr>
+            <tr data-row-id="row-T9"><td><a href="#ai-T9">T9</a></td><td class="ai-row-title">Awaiting-first-payment nudge</td><td class="ai-row-pri">P2</td><td class="ai-row-stage">Sign-up / business details</td><td class="ai-row-reach">~60</td><td class="ai-row-lift">+0.8 pp</td><td class="ai-row-conf">20%</td></tr>
+            <tr data-row-id="row-T10"><td><a href="#ai-T10">T10</a></td><td class="ai-row-title">IEC reactivation guide</td><td class="ai-row-pri">P2</td><td class="ai-row-stage">Document upload</td><td class="ai-row-reach">10</td><td class="ai-row-lift">+0.5 pp</td><td class="ai-row-conf">50%</td></tr>
+            <tr data-row-id="row-T11"><td><a href="#ai-T11">T11</a></td><td class="ai-row-title">Contract / NDA trust signal</td><td class="ai-row-pri">P3</td><td class="ai-row-stage">Document upload</td><td class="ai-row-reach">8-10 FL</td><td class="ai-row-lift">+0.3 pp</td><td class="ai-row-conf">50%</td></tr>
+            <tr data-row-id="row-T12"><td><a href="#ai-T12">T12</a></td><td class="ai-row-title">Pre-PAN trust section and savings calculator</td><td class="ai-row-pri">P3</td><td class="ai-row-stage">Sign-up</td><td class="ai-row-reach">20-22</td><td class="ai-row-lift">+0.3 pp</td><td class="ai-row-conf">20%</td></tr>
           </tbody>
         </table>
+        <button class="ai-add-btn" id="ai-add-row-btn">+ Add row</button>
       </div>
 
       <div class="ai-cards">
@@ -2146,6 +2215,7 @@
           </div>
         </div>
 
+        <button class="ai-add-btn" id="ai-add-card-btn">+ Add task</button>
       </div>
 
       <div class="ai-open-threads">
@@ -3124,6 +3194,10 @@
         if (els.length) b.page[key] = Array.from(els).map(e => e.innerHTML);
       });
 
+      // Action items: record baseline IDs so we can diff adds/deletes later
+      b.aiCardIds = Array.from(document.querySelectorAll('.ai-card')).map(c => c.id);
+      b.aiRowIds  = Array.from(document.querySelectorAll('.ai-summary-table tbody tr')).map(r => r.dataset.rowId);
+
       BASELINE = b;
     }
 
@@ -3209,12 +3283,40 @@
         if (diff.some(x => x !== null)) state.page[key] = diff;
       });
 
+      // Action items: track added/deleted cards and rows
+      const aiSerialize = (el) => {
+        const clone = el.cloneNode(true);
+        clone.querySelectorAll('.ai-card-del, .ai-row-del').forEach(b => b.remove());
+        clone.querySelectorAll('[contenteditable]').forEach(e => e.removeAttribute('contenteditable'));
+        clone.querySelectorAll('[spellcheck]').forEach(e => e.removeAttribute('spellcheck'));
+        return clone.outerHTML;
+      };
+      const baselineCardIds = new Set(BASELINE.aiCardIds || []);
+      const currentCards = Array.from(document.querySelectorAll('.ai-card'));
+      const currentCardIdSet = new Set(currentCards.map(c => c.id));
+      state.aiAddedCards = currentCards
+        .filter(c => !baselineCardIds.has(c.id))
+        .map(c => ({ id: c.id, html: aiSerialize(c) }));
+      state.aiDeletedCardIds = (BASELINE.aiCardIds || []).filter(id => !currentCardIdSet.has(id));
+
+      const baselineRowIds = new Set(BASELINE.aiRowIds || []);
+      const currentRows = Array.from(document.querySelectorAll('.ai-summary-table tbody tr'));
+      const currentRowIdSet = new Set(currentRows.map(r => r.dataset.rowId));
+      state.aiAddedRows = currentRows
+        .filter(r => !baselineRowIds.has(r.dataset.rowId))
+        .map(r => ({ id: r.dataset.rowId, html: aiSerialize(r) }));
+      state.aiDeletedRowIds = (BASELINE.aiRowIds || []).filter(id => !currentRowIdSet.has(id));
+
       // Strip empty containers so the JSON is small and clear
       if (Object.keys(state.nodes).length === 0) delete state.nodes;
       if (Object.keys(state.order).length === 0) delete state.order;
       if (Object.keys(state.page).length === 0) delete state.page;
       if (state.addedNodes.length === 0) delete state.addedNodes;
       if (state.deletedNodes.length === 0) delete state.deletedNodes;
+      if (state.aiAddedCards.length === 0) delete state.aiAddedCards;
+      if (state.aiDeletedCardIds.length === 0) delete state.aiDeletedCardIds;
+      if (state.aiAddedRows.length === 0) delete state.aiAddedRows;
+      if (state.aiDeletedRowIds.length === 0) delete state.aiDeletedRowIds;
 
       try {
         if (Object.keys(state).length === 0) {
@@ -3331,6 +3433,32 @@
           const n = col.querySelector(`.node[data-id="${id}"]`);
           if (n) col.appendChild(n);
         });
+      });
+
+      // Action items: apply deletions FIRST, then additions, before field-level restore
+      (state.aiDeletedCardIds || []).forEach(id => {
+        const c = document.getElementById(id);
+        if (c) c.remove();
+      });
+      (state.aiDeletedRowIds || []).forEach(id => {
+        const r = document.querySelector(`.ai-summary-table tbody tr[data-row-id="${id}"]`);
+        if (r) r.remove();
+      });
+      (state.aiAddedCards || []).forEach(({ html }) => {
+        const tmpl = document.createElement('template');
+        tmpl.innerHTML = (html || '').trim();
+        const card = tmpl.content.firstElementChild;
+        if (!card) return;
+        const container = document.querySelector('.ai-cards');
+        if (container) container.appendChild(card);
+      });
+      (state.aiAddedRows || []).forEach(({ html }) => {
+        const tmpl = document.createElement('template');
+        tmpl.innerHTML = (html || '').trim();
+        const row = tmpl.content.firstElementChild;
+        if (!row) return;
+        const tbody = document.querySelector('.ai-summary-table tbody');
+        if (tbody) tbody.appendChild(row);
       });
 
       // Restore page-level deltas
@@ -3576,34 +3704,175 @@
         }
       });
     }
-    document.querySelectorAll('.ai-pri-pill').forEach(pill => {
-      pill.addEventListener('click', (e) => {
+    // Pill click wiring is handled per-card below (see wireAiPills + the foreach loop after restoreState).
+
+    // ===== Action Items: add / delete cards and rows =====
+    function ensureAiCardDeleteBtn(card) {
+      if (card.querySelector(':scope > .ai-card-del')) return;
+      const b = document.createElement('button');
+      b.className = 'ai-card-del';
+      b.textContent = '×';
+      b.title = 'Delete this task';
+      card.appendChild(b);
+      b.addEventListener('click', (e) => {
         if (!editMode) return;
         e.stopPropagation();
-        const cur = pill.textContent.trim();
-        const next = AI_PRI_ORDER[(AI_PRI_ORDER.indexOf(cur) + 1) % AI_PRI_ORDER.length];
-        AI_PRI_ORDER.forEach(c => pill.classList.remove(c));
-        pill.classList.add(next);
-        pill.textContent = next;
-        const card = pill.closest('.ai-card');
-        if (card) card.dataset.priority = next;
+        const title = (card.querySelector('.ai-title')?.textContent || 'this task').trim();
+        if (!confirm(`Delete "${title}"? This cannot be undone (unless you Reset).`)) return;
+        card.remove();
         persistState();
       });
+    }
+    function ensureAiRowDeleteBtn(row) {
+      if (row.querySelector(':scope > .ai-row-del-cell')) return;
+      const td = document.createElement('td');
+      td.className = 'ai-row-del-cell';
+      const b = document.createElement('button');
+      b.className = 'ai-row-del';
+      b.textContent = '×';
+      b.title = 'Delete this row';
+      td.appendChild(b);
+      row.appendChild(td);
+      b.addEventListener('click', (e) => {
+        if (!editMode) return;
+        e.stopPropagation();
+        if (!confirm('Delete this row? This cannot be undone (unless you Reset).')) return;
+        row.remove();
+        persistState();
+      });
+    }
+    function nextAiTaskNum() {
+      const used = new Set(Array.from(document.querySelectorAll('.ai-card'))
+        .map(c => parseInt((c.dataset.taskId || '').replace(/^T/, ''), 10))
+        .filter(n => !isNaN(n)));
+      let n = 1;
+      while (used.has(n)) n++;
+      return n;
+    }
+    function wireAiPills(card) {
+      const pri = card.querySelector('.ai-pri-pill');
+      if (pri) {
+        pri.addEventListener('click', (e) => {
+          if (!editMode) return;
+          e.stopPropagation();
+          const cur = pri.textContent.trim();
+          const next = AI_PRI_ORDER[(AI_PRI_ORDER.indexOf(cur) + 1) % AI_PRI_ORDER.length];
+          AI_PRI_ORDER.forEach(c => pri.classList.remove(c));
+          pri.classList.add(next);
+          pri.textContent = next;
+          card.dataset.priority = next;
+          persistState();
+        });
+      }
+      const st = card.querySelector('.ai-status-pill');
+      if (st) {
+        st.addEventListener('click', (e) => {
+          if (!editMode) return;
+          e.stopPropagation();
+          const cur = st.textContent.trim();
+          const next = AI_STATUS_ORDER[(AI_STATUS_ORDER.indexOf(cur) + 1) % AI_STATUS_ORDER.length];
+          ['status-notstarted','status-indesign','status-indev','status-intesting','status-shipped','status-blocked']
+            .forEach(c => st.classList.remove(c));
+          st.classList.add(aiStatusClass(next));
+          st.textContent = next;
+          card.dataset.status = next;
+          persistState();
+        });
+      }
+    }
+    function applyAiEditable(scope) {
+      if (!editMode) return;
+      EDITABLE_SELECTORS.forEach(sel => {
+        scope.querySelectorAll(sel).forEach(el => {
+          el.setAttribute('contenteditable', 'true');
+          el.setAttribute('spellcheck', 'false');
+        });
+      });
+    }
+    function addAiCard() {
+      const n = nextAiTaskNum();
+      const id = 'ai-T' + n;
+      const card = document.createElement('div');
+      card.className = 'ai-card';
+      card.id = id;
+      card.dataset.taskId = 'T' + n;
+      card.dataset.priority = 'P2';
+      card.dataset.status = 'Not started';
+      card.innerHTML = `
+        <div class="ai-card-head">
+          <div class="ai-id">T${n}</div>
+          <div class="ai-title">New task</div>
+          <span class="ai-pri-pill P2" contenteditable="false">P2</span>
+          <span class="ai-status-pill status-notstarted" contenteditable="false">Not started</span>
+        </div>
+        <div class="ai-meta">
+          <div class="ai-cell"><span class="ai-label">Stage</span><div class="ai-val ai-stage" data-placeholder="e.g., Document upload"></div></div>
+          <div class="ai-cell"><span class="ai-label">Reach / mo</span><div class="ai-val ai-reach" data-placeholder="—"></div></div>
+          <div class="ai-cell"><span class="ai-label">Est. lift</span><div class="ai-val ai-lift" data-placeholder="—"></div></div>
+          <div class="ai-cell"><span class="ai-label">Confidence</span><div class="ai-val ai-conf" data-placeholder="—"></div></div>
+        </div>
+        <div class="ai-links">
+          <div class="ai-cell"><span class="ai-label">Jira</span><div class="ai-val ai-jira" data-placeholder="Paste Jira link…"></div></div>
+          <div class="ai-cell"><span class="ai-label">PRD</span><div class="ai-val ai-prd" data-placeholder="Paste PRD link…"></div></div>
+          <div class="ai-cell"><span class="ai-label">Timeline</span><div class="ai-val ai-timeline" data-placeholder="e.g., May 26 – Jun 9"></div></div>
+          <div class="ai-cell"><span class="ai-label">Owner</span><div class="ai-val ai-owner" data-placeholder="Add owner…"></div></div>
+        </div>
+        <div class="ai-body">
+          <h4>Problem</h4>
+          <div class="ai-text ai-problem" data-placeholder="Describe the problem…"></div>
+          <h4>What is in scope</h4>
+          <div class="ai-text ai-scope" data-placeholder="What we'll build…"></div>
+          <h4>Draft acceptance criteria</h4>
+          <div class="ai-text ai-accept" data-placeholder="How we'll know it's done…"></div>
+          <h4>Why it matters</h4>
+          <div class="ai-text ai-why" data-placeholder="Impact rationale…"></div>
+          <h4>Notes</h4>
+          <div class="ai-text ai-notes" data-placeholder="Add notes…"></div>
+        </div>
+      `;
+      const container = document.querySelector('.ai-cards');
+      if (!container) return;
+      container.appendChild(card);
+      ensureAiCardDeleteBtn(card);
+      wireAiPills(card);
+      applyAiEditable(card);
+      persistState();
+      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    function addAiRow() {
+      const used = new Set(Array.from(document.querySelectorAll('.ai-summary-table tbody tr'))
+        .map(r => parseInt((r.dataset.rowId || '').replace(/^row-T/, ''), 10))
+        .filter(n => !isNaN(n)));
+      let n = 1;
+      while (used.has(n)) n++;
+      const row = document.createElement('tr');
+      row.dataset.rowId = 'row-T' + n;
+      row.innerHTML = `
+        <td>T${n}</td>
+        <td class="ai-row-title">New task</td>
+        <td class="ai-row-pri">P2</td>
+        <td class="ai-row-stage"></td>
+        <td class="ai-row-reach"></td>
+        <td class="ai-row-lift"></td>
+        <td class="ai-row-conf"></td>
+      `;
+      const tbody = document.querySelector('.ai-summary-table tbody');
+      if (!tbody) return;
+      tbody.appendChild(row);
+      ensureAiRowDeleteBtn(row);
+      applyAiEditable(row);
+      persistState();
+      row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    document.getElementById('ai-add-card-btn')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (!editMode) return;
+      addAiCard();
     });
-    document.querySelectorAll('.ai-status-pill').forEach(pill => {
-      pill.addEventListener('click', (e) => {
-        if (!editMode) return;
-        e.stopPropagation();
-        const cur = pill.textContent.trim();
-        const next = AI_STATUS_ORDER[(AI_STATUS_ORDER.indexOf(cur) + 1) % AI_STATUS_ORDER.length];
-        ['status-notstarted','status-indesign','status-indev','status-intesting','status-shipped','status-blocked']
-          .forEach(c => pill.classList.remove(c));
-        pill.classList.add(aiStatusClass(next));
-        pill.textContent = next;
-        const card = pill.closest('.ai-card');
-        if (card) card.dataset.status = next;
-        persistState();
-      });
+    document.getElementById('ai-add-row-btn')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (!editMode) return;
+      addAiRow();
     });
 
     // Capture file baseline BEFORE applying any saved user edits
@@ -3612,6 +3881,16 @@
     restoreState();
     // Sync pill CSS classes with restored text content
     refreshAiPillClasses();
+    // Wire pill cycles + delete buttons on cards/rows that may have been restored from state
+    document.querySelectorAll('.ai-card').forEach(card => {
+      // Avoid double-wiring: skip cards that already had their pills wired at init
+      if (!card.dataset.aiWired) {
+        wireAiPills(card);
+        card.dataset.aiWired = '1';
+      }
+      ensureAiCardDeleteBtn(card);
+    });
+    document.querySelectorAll('.ai-summary-table tbody tr').forEach(ensureAiRowDeleteBtn);
     applyFilter();
     setTimeout(drawLines, 60);
   </script>
