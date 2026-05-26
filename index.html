@@ -2,7 +2,7 @@
 <html lang="en"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="code-version" content="v2-sticky-header">
+  <meta name="code-version" content="v3-action-items-tab">
   <title>Direct onboarding — problems &amp; solutions flowchart</title>
   <style>
     :root {
@@ -1050,6 +1050,180 @@
       color: var(--accent);
       background: var(--accent-bg);
     }
+
+    /* ===== Final Action Items tab ===== */
+    .ai-intro { margin-bottom: 32px; }
+    .ai-intro p { margin-bottom: 12px; }
+
+    .ai-summary {
+      margin-bottom: 40px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
+    }
+    .ai-summary h2 {
+      font-size: 16px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+    .ai-summary table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      font-variant-numeric: tabular-nums;
+    }
+    .ai-summary th, .ai-summary td {
+      text-align: left;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .ai-summary th {
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+    }
+    .ai-summary tbody tr:last-child td { border-bottom: none; }
+    .ai-summary td a { color: var(--ink); text-decoration: none; }
+    .ai-summary td a:hover { text-decoration: underline; }
+
+    .ai-cards {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+    .ai-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 22px;
+      box-shadow: var(--shadow-sm);
+      scroll-margin-top: 80px;
+    }
+    .ai-card-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .ai-id {
+      font-weight: 800;
+      font-size: 13px;
+      color: var(--ink-faint);
+      letter-spacing: 0.04em;
+      min-width: 32px;
+    }
+    .ai-title {
+      font-size: 17px;
+      font-weight: 800;
+      flex: 1 1 auto;
+      min-width: 200px;
+    }
+
+    .ai-pri-pill,
+    .ai-status-pill {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 100px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+    .ai-pri-pill.P0 { background: var(--red-bg);    color: var(--red); }
+    .ai-pri-pill.P1 { background: var(--amber-bg);  color: var(--amber); }
+    .ai-pri-pill.P2 { background: var(--accent-bg); color: var(--accent); }
+    .ai-pri-pill.P3 { background: var(--grey-bg);   color: var(--grey); }
+
+    .ai-status-pill.status-notstarted { background: var(--grey-bg);   color: var(--grey); }
+    .ai-status-pill.status-indesign   { background: var(--stage-bg);  color: var(--stage); }
+    .ai-status-pill.status-indev      { background: var(--amber-bg);  color: var(--amber); }
+    .ai-status-pill.status-intesting  { background: var(--problem-bg); color: var(--problem); }
+    .ai-status-pill.status-shipped    { background: var(--green-bg);  color: var(--green); }
+    .ai-status-pill.status-blocked    { background: var(--red-bg);    color: var(--red); }
+
+    body.edit-mode .ai-pri-pill,
+    body.edit-mode .ai-status-pill { cursor: pointer; }
+    body.edit-mode .ai-pri-pill:hover,
+    body.edit-mode .ai-status-pill:hover {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .ai-meta, .ai-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .ai-links { margin-bottom: 20px; }
+    .ai-cell .ai-label {
+      display: block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 4px;
+    }
+    .ai-cell .ai-val {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      min-height: 1.2em;
+      word-break: break-word;
+    }
+    .ai-cell .ai-val:empty::before {
+      content: attr(data-placeholder);
+      color: var(--ink-faint);
+      font-weight: 400;
+      font-style: italic;
+    }
+    .ai-cell .ai-val.is-link {
+      color: var(--accent);
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .ai-body h4 {
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-faint);
+      margin: 16px 0 6px;
+    }
+    .ai-body h4:first-child { margin-top: 0; }
+    .ai-body .ai-text {
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--ink);
+    }
+    .ai-body .ai-text p { margin-bottom: 8px; }
+
+    .ai-open-threads {
+      margin-top: 32px;
+      background: var(--surface-soft);
+      border: 1px dashed var(--border-strong);
+      border-radius: 12px;
+      padding: 18px 22px;
+    }
+    .ai-open-threads h2 {
+      font-size: 14px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-faint);
+      margin-bottom: 10px;
+    }
+    .ai-open-threads .ai-text { font-size: 14px; line-height: 1.55; }
+    .ai-open-threads .ai-text p { margin-bottom: 8px; }
   </style>
 <style></style><style></style></head>
 <body>
@@ -1058,6 +1232,7 @@
     <nav class="tabs" role="tablist">
       <button class="tab-btn" data-tab="context" role="tab">Context &amp; Targets</button>
       <button class="tab-btn active" data-tab="flowchart" role="tab">Flowchart</button>
+      <button class="tab-btn" data-tab="action-items" role="tab">Final Action Items</button>
       <div class="mode-buttons">
         <button class="mode-btn primary" id="edit-toggle">Edit mode</button>
         <button class="mode-btn" id="export-btn">Download HTML</button>
@@ -1538,6 +1713,452 @@
 
     </div>
 
+    <div id="tab-action-items" class="tab-panel hidden">
+
+      <div class="eyebrow">Action items · Day-to-day tracking</div>
+      <h1>Direct Onboarding Backlog</h1>
+      <p class="lede">Tasks to take DQO% from 45% to 60%.</p>
+
+      <div class="ai-intro">
+        <p class="ai-intro-1">This breaks the direct onboarding roadmap into tasks you can write a PRD on, hand to design, and then to tech. Each task maps to one solution from the flowchart. The data, stage, problem, and impact estimate are pulled straight from the roadmap so you don't have to re-derive anything when you start the spec.</p>
+        <p class="ai-intro-2"><strong>Scope of the effort:</strong> Freelancers and Sole Props who start direct onboarding, get stuck mid flow, and only finish after a sales rep steps in. March 2026 baseline is 245 such ICP onboardings saved by sales across the two segments, which is 81% of all sales-saved ICPs. The goal is to recover roughly 70% of them through product.</p>
+        <p class="ai-intro-3"><strong>Order to start in:</strong> the two P0 tasks (T1 and T2) cover the two biggest leaks, the doc upload step and the business details form, and together account for about half of all stuck customers and the largest share of the projected lift. Everything else is sequenced after.</p>
+      </div>
+
+      <div class="ai-summary">
+        <h2 class="ai-summary-h">Backlog at a glance</h2>
+        <table class="ai-summary-table">
+          <thead>
+            <tr><th>#</th><th>Task</th><th>Priority</th><th>Stage</th><th>Reach / mo</th><th>Est. lift</th><th>Confidence</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><a href="#ai-T1">T1</a></td><td class="ai-row-title">Freelancer alternative-document flow</td><td class="ai-row-pri">P0</td><td class="ai-row-stage">Document upload</td><td class="ai-row-reach">93</td><td class="ai-row-lift">+4.1 pp</td><td class="ai-row-conf">70%</td></tr>
+            <tr><td><a href="#ai-T2">T2</a></td><td class="ai-row-title">Business details form fixes</td><td class="ai-row-pri">P0</td><td class="ai-row-stage">Business details</td><td class="ai-row-reach">74</td><td class="ai-row-lift">+3.2 pp</td><td class="ai-row-conf">70%</td></tr>
+            <tr><td><a href="#ai-T3">T3</a></td><td class="ai-row-title">Inline Skydo info and trust building</td><td class="ai-row-pri">P1</td><td class="ai-row-stage">Sign-up / business details</td><td class="ai-row-reach">15</td><td class="ai-row-lift">+1.0 pp</td><td class="ai-row-conf">50%</td></tr>
+            <tr><td><a href="#ai-T4">T4</a></td><td class="ai-row-title">Sole-prop fast-forward (GST + IEC declaration)</td><td class="ai-row-pri">P1</td><td class="ai-row-stage">Document upload</td><td class="ai-row-reach">27 SP</td><td class="ai-row-lift">+1.2 pp</td><td class="ai-row-conf">70%</td></tr>
+            <tr><td><a href="#ai-T5">T5</a></td><td class="ai-row-title">Document readiness checklist</td><td class="ai-row-pri">P1</td><td class="ai-row-stage">Pre-PAN / document upload</td><td class="ai-row-reach">35-45</td><td class="ai-row-lift">+1.8 pp</td><td class="ai-row-conf">70%</td></tr>
+            <tr><td><a href="#ai-T6">T6</a></td><td class="ai-row-title">Revamp or remove the Sole Prop / Freelancer question</td><td class="ai-row-pri">P1</td><td class="ai-row-stage">Document upload</td><td class="ai-row-reach">33</td><td class="ai-row-lift">+1.0 pp</td><td class="ai-row-conf">50%</td></tr>
+            <tr><td><a href="#ai-T7">T7</a></td><td class="ai-row-title">DigiLocker fallback path</td><td class="ai-row-pri">P1</td><td class="ai-row-stage">Aadhaar / DigiLocker</td><td class="ai-row-reach">23</td><td class="ai-row-lift">+1.0 pp</td><td class="ai-row-conf">70%</td></tr>
+            <tr><td><a href="#ai-T8">T8</a></td><td class="ai-row-title">Registration-pending state</td><td class="ai-row-pri">P2</td><td class="ai-row-stage">Document upload</td><td class="ai-row-reach">35-45</td><td class="ai-row-lift">+1.3 pp</td><td class="ai-row-conf">50%</td></tr>
+            <tr><td><a href="#ai-T9">T9</a></td><td class="ai-row-title">Awaiting-first-payment nudge</td><td class="ai-row-pri">P2</td><td class="ai-row-stage">Sign-up / business details</td><td class="ai-row-reach">~60</td><td class="ai-row-lift">+0.8 pp</td><td class="ai-row-conf">20%</td></tr>
+            <tr><td><a href="#ai-T10">T10</a></td><td class="ai-row-title">IEC reactivation guide</td><td class="ai-row-pri">P2</td><td class="ai-row-stage">Document upload</td><td class="ai-row-reach">10</td><td class="ai-row-lift">+0.5 pp</td><td class="ai-row-conf">50%</td></tr>
+            <tr><td><a href="#ai-T11">T11</a></td><td class="ai-row-title">Contract / NDA trust signal</td><td class="ai-row-pri">P3</td><td class="ai-row-stage">Document upload</td><td class="ai-row-reach">8-10 FL</td><td class="ai-row-lift">+0.3 pp</td><td class="ai-row-conf">50%</td></tr>
+            <tr><td><a href="#ai-T12">T12</a></td><td class="ai-row-title">Pre-PAN trust section and savings calculator</td><td class="ai-row-pri">P3</td><td class="ai-row-stage">Sign-up</td><td class="ai-row-reach">20-22</td><td class="ai-row-lift">+0.3 pp</td><td class="ai-row-conf">20%</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="ai-cards">
+
+        <div class="ai-card" id="ai-T1" data-task-id="T1" data-priority="P0" data-status="Not started">
+          <div class="ai-card-head">
+            <div class="ai-id">T1</div>
+            <div class="ai-title">Freelancer alternative-document flow</div>
+            <span class="ai-pri-pill P0" contenteditable="false">P0</span>
+            <span class="ai-status-pill status-notstarted" contenteditable="false">Not started</span>
+          </div>
+          <div class="ai-meta">
+            <div class="ai-cell"><span class="ai-label">Stage</span><div class="ai-val ai-stage">Document upload / bank statement (COMPANY_BANK_ACCOUNT_DETAILS)</div></div>
+            <div class="ai-cell"><span class="ai-label">Reach / mo</span><div class="ai-val ai-reach">93</div></div>
+            <div class="ai-cell"><span class="ai-label">Est. lift</span><div class="ai-val ai-lift">+4.1 pp</div></div>
+            <div class="ai-cell"><span class="ai-label">Confidence</span><div class="ai-val ai-conf">70%</div></div>
+          </div>
+          <div class="ai-links">
+            <div class="ai-cell"><span class="ai-label">Jira</span><div class="ai-val ai-jira" data-placeholder="Paste Jira link…"></div></div>
+            <div class="ai-cell"><span class="ai-label">PRD</span><div class="ai-val ai-prd" data-placeholder="Paste PRD link…"></div></div>
+            <div class="ai-cell"><span class="ai-label">Timeline</span><div class="ai-val ai-timeline" data-placeholder="e.g., May 26 – Jun 9"></div></div>
+            <div class="ai-cell"><span class="ai-label">Owner</span><div class="ai-val ai-owner" data-placeholder="Add owner…"></div></div>
+          </div>
+          <div class="ai-body">
+            <h4>Problem</h4>
+            <div class="ai-text ai-problem">About 70% of ICP freelancers try to verify by uploading a bank statement. The GPT parser auto-verifies 411 of 757 freelancer uploads (54%) and fails on the other 346 (46%). Alternative documents do work for these failures, and more than 90% of the 346 eventually onboard through contracts, platform screenshots, or invoices. The real issue is that the alternative document path is discovered through a sales conversation today. It is not visible, not clearly explained, and not intuitive inside the product. This is the single biggest leak: 120 stuck customers, 49% of all stuck customers fall here.</div>
+            <h4>What is in scope</h4>
+            <div class="ai-text ai-scope">Make the alternative document path a first-class option rather than a hidden fallback. Surface it prominently when the bank statement parser fails. Productise the contract-only flow that sales currently runs by hand. Add a short "what documents do you have" or help section so a user can self-select the right proof. The proactive help cadence for stuck users is already in progress and should plug into this.</div>
+            <h4>Draft acceptance criteria</h4>
+            <div class="ai-text ai-accept">When a bank statement upload fails parsing, the user is shown the alternative document options without needing to contact anyone. The documents that already work are offered in order of how often they succeed: platform screenshots (23% of recoveries), signed contracts (17%), invoices (12%). A user can complete verification through the contract-only path entirely in product.</div>
+            <h4>Why it matters</h4>
+            <div class="ai-text ai-why">Reach is 93 a month, estimated lift +4.1 pp, the largest of any single task.</div>
+            <h4>Notes</h4>
+            <div class="ai-text ai-notes" data-placeholder="Add notes…"></div>
+          </div>
+        </div>
+
+        <div class="ai-card" id="ai-T2" data-task-id="T2" data-priority="P0" data-status="Not started">
+          <div class="ai-card-head">
+            <div class="ai-id">T2</div>
+            <div class="ai-title">Business details form fixes</div>
+            <span class="ai-pri-pill P0" contenteditable="false">P0</span>
+            <span class="ai-status-pill status-notstarted" contenteditable="false">Not started</span>
+          </div>
+          <div class="ai-meta">
+            <div class="ai-cell"><span class="ai-label">Stage</span><div class="ai-val ai-stage">Business details form (COMPANY_PAN_DETAILS)</div></div>
+            <div class="ai-cell"><span class="ai-label">Reach / mo</span><div class="ai-val ai-reach">74</div></div>
+            <div class="ai-cell"><span class="ai-label">Est. lift</span><div class="ai-val ai-lift">+3.2 pp</div></div>
+            <div class="ai-cell"><span class="ai-label">Confidence</span><div class="ai-val ai-conf">70%</div></div>
+          </div>
+          <div class="ai-links">
+            <div class="ai-cell"><span class="ai-label">Jira</span><div class="ai-val ai-jira" data-placeholder="Paste Jira link…"></div></div>
+            <div class="ai-cell"><span class="ai-label">PRD</span><div class="ai-val ai-prd" data-placeholder="Paste PRD link…"></div></div>
+            <div class="ai-cell"><span class="ai-label">Timeline</span><div class="ai-val ai-timeline" data-placeholder="e.g., May 26 – Jun 9"></div></div>
+            <div class="ai-cell"><span class="ai-label">Owner</span><div class="ai-val ai-owner" data-placeholder="Add owner…"></div></div>
+          </div>
+          <div class="ai-body">
+            <h4>Problem</h4>
+            <div class="ai-text ai-problem">The form has too much friction. The industry dropdown is confusing, the 100-character description requirement is unclear, there are too many questions on one screen, and some lead-qualification fields are collected that compliance does not actually need. 74 stuck, 30% of all stuck customers.</div>
+            <h4>What is in scope</h4>
+            <div class="ai-text ai-scope">Make selecting an industry easier, cut the number of choices, and reorder options by volume. Put more emphasis on submitting a website. Remove the 100-character limit and let AI suggest a description. Drop the lead-qualification questions that are not required. Move to progressive disclosure so the user answers one thing at a time instead of facing the whole form at once.</div>
+            <h4>Draft acceptance criteria</h4>
+            <div class="ai-text ai-accept">A user can pick their industry without confusion from a shorter, volume-ordered list. The description field has no minimum character barrier and offers a suggested draft. Only compliance-required fields remain. The form is presented step by step rather than as a single long screen.</div>
+            <h4>Why it matters</h4>
+            <div class="ai-text ai-why">Reach 74 a month, estimated lift +3.2 pp.</div>
+            <h4>Notes</h4>
+            <div class="ai-text ai-notes" data-placeholder="Add notes…"></div>
+          </div>
+        </div>
+
+        <div class="ai-card" id="ai-T3" data-task-id="T3" data-priority="P1" data-status="Not started">
+          <div class="ai-card-head">
+            <div class="ai-id">T3</div>
+            <div class="ai-title">Inline Skydo info and trust building</div>
+            <span class="ai-pri-pill P1" contenteditable="false">P1</span>
+            <span class="ai-status-pill status-notstarted" contenteditable="false">Not started</span>
+          </div>
+          <div class="ai-meta">
+            <div class="ai-cell"><span class="ai-label">Stage</span><div class="ai-val ai-stage">Sign-up and business details</div></div>
+            <div class="ai-cell"><span class="ai-label">Reach / mo</span><div class="ai-val ai-reach">15</div></div>
+            <div class="ai-cell"><span class="ai-label">Est. lift</span><div class="ai-val ai-lift">+1.0 pp</div></div>
+            <div class="ai-cell"><span class="ai-label">Confidence</span><div class="ai-val ai-conf">50%</div></div>
+          </div>
+          <div class="ai-links">
+            <div class="ai-cell"><span class="ai-label">Jira</span><div class="ai-val ai-jira" data-placeholder="Paste Jira link…"></div></div>
+            <div class="ai-cell"><span class="ai-label">PRD</span><div class="ai-val ai-prd" data-placeholder="Paste PRD link…"></div></div>
+            <div class="ai-cell"><span class="ai-label">Timeline</span><div class="ai-val ai-timeline" data-placeholder="e.g., May 26 – Jun 9"></div></div>
+            <div class="ai-cell"><span class="ai-label">Owner</span><div class="ai-val ai-owner" data-placeholder="Add owner…"></div></div>
+          </div>
+          <div class="ai-body">
+            <h4>Problem</h4>
+            <div class="ai-text ai-problem">A set of users want more information or more conviction on Skydo before they hand over personal details. Common themes from notes are "what exactly does Skydo do", "are there any account opening charges", and "let me check with my CA". The form feels like a high-commitment step while entering a PAN is relatively easy, so the hesitation sits before the form rather than at it.</div>
+            <h4>What is in scope</h4>
+            <div class="ai-text ai-scope">Add subtle inline information across the flow on what Skydo is, how it helps, and that it is fully compliant. Place trust nudges at the points where users hesitate rather than in one block.</div>
+            <h4>Draft acceptance criteria</h4>
+            <div class="ai-text ai-accept">At the relevant steps, a user sees short inline answers to "what is Skydo" and "how does it help" without leaving the flow. Messaging on compliance and the cross-border value is present where commitment rises.</div>
+            <h4>Why it matters</h4>
+            <div class="ai-text ai-why">Reach 15 a month, estimated lift +1.0 pp.</div>
+            <h4>Notes</h4>
+            <div class="ai-text ai-notes" data-placeholder="Add notes…"></div>
+          </div>
+        </div>
+
+        <div class="ai-card" id="ai-T4" data-task-id="T4" data-priority="P1" data-status="Not started">
+          <div class="ai-card-head">
+            <div class="ai-id">T4</div>
+            <div class="ai-title">Sole-prop fast-forward (GST + IEC declaration)</div>
+            <span class="ai-pri-pill P1" contenteditable="false">P1</span>
+            <span class="ai-status-pill status-notstarted" contenteditable="false">Not started</span>
+          </div>
+          <div class="ai-meta">
+            <div class="ai-cell"><span class="ai-label">Stage</span><div class="ai-val ai-stage">Document upload. Affects Sole Props.</div></div>
+            <div class="ai-cell"><span class="ai-label">Reach / mo</span><div class="ai-val ai-reach">27 SP</div></div>
+            <div class="ai-cell"><span class="ai-label">Est. lift</span><div class="ai-val ai-lift">+1.2 pp</div></div>
+            <div class="ai-cell"><span class="ai-label">Confidence</span><div class="ai-val ai-conf">70%</div></div>
+          </div>
+          <div class="ai-links">
+            <div class="ai-cell"><span class="ai-label">Jira</span><div class="ai-val ai-jira" data-placeholder="Paste Jira link…"></div></div>
+            <div class="ai-cell"><span class="ai-label">PRD</span><div class="ai-val ai-prd" data-placeholder="Paste PRD link…"></div></div>
+            <div class="ai-cell"><span class="ai-label">Timeline</span><div class="ai-val ai-timeline" data-placeholder="e.g., May 26 – Jun 9"></div></div>
+            <div class="ai-cell"><span class="ai-label">Owner</span><div class="ai-val ai-owner" data-placeholder="Add owner…"></div></div>
+          </div>
+          <div class="ai-body">
+            <h4>Problem</h4>
+            <div class="ai-text ai-problem">Some Sole Props who have both GST and IEC are still stuck at doc upload. They can onboard directly without documents, but we show them the Sole Prop / Freelancer question and the doc upload screen when we cannot retrieve one of those documents automatically. Sales unblocks them through manual override or by asking for physical copies.</div>
+            <h4>What is in scope</h4>
+            <div class="ai-text ai-scope">When a user states they have GST and IEC, take a declaration or give them a simpler doc upload experience instead of the full path.</div>
+            <h4>Draft acceptance criteria</h4>
+            <div class="ai-text ai-accept">A Sole Prop who declares GST and IEC is routed to a lighter path and is not forced through the standard document upload screen when automatic retrieval fails.</div>
+            <h4>Why it matters</h4>
+            <div class="ai-text ai-why">Reach 27 Sole Props a month, estimated lift +1.2 pp.</div>
+            <h4>Notes</h4>
+            <div class="ai-text ai-notes" data-placeholder="Add notes…"></div>
+          </div>
+        </div>
+
+        <div class="ai-card" id="ai-T5" data-task-id="T5" data-priority="P1" data-status="Not started">
+          <div class="ai-card-head">
+            <div class="ai-id">T5</div>
+            <div class="ai-title">Document readiness checklist</div>
+            <span class="ai-pri-pill P1" contenteditable="false">P1</span>
+            <span class="ai-status-pill status-notstarted" contenteditable="false">Not started</span>
+          </div>
+          <div class="ai-meta">
+            <div class="ai-cell"><span class="ai-label">Stage</span><div class="ai-val ai-stage">Before the PAN step, feeding the document upload step.</div></div>
+            <div class="ai-cell"><span class="ai-label">Reach / mo</span><div class="ai-val ai-reach">35-45</div></div>
+            <div class="ai-cell"><span class="ai-label">Est. lift</span><div class="ai-val ai-lift">+1.8 pp</div></div>
+            <div class="ai-cell"><span class="ai-label">Confidence</span><div class="ai-val ai-conf">70%</div></div>
+          </div>
+          <div class="ai-links">
+            <div class="ai-cell"><span class="ai-label">Jira</span><div class="ai-val ai-jira" data-placeholder="Paste Jira link…"></div></div>
+            <div class="ai-cell"><span class="ai-label">PRD</span><div class="ai-val ai-prd" data-placeholder="Paste PRD link…"></div></div>
+            <div class="ai-cell"><span class="ai-label">Timeline</span><div class="ai-val ai-timeline" data-placeholder="e.g., May 26 – Jun 9"></div></div>
+            <div class="ai-cell"><span class="ai-label">Owner</span><div class="ai-val ai-owner" data-placeholder="Add owner…"></div></div>
+          </div>
+          <div class="ai-body">
+            <h4>Problem</h4>
+            <div class="ai-text ai-problem">A checklist is shown today but it is very hard to understand. Users reach the document step unprepared.</div>
+            <h4>What is in scope</h4>
+            <div class="ai-text ai-scope">Before the PAN step, show a clear "you'll need these, do you have them" checklist. A Sole Prop document checklist already exists, so check whether it can be reused for freelancers.</div>
+            <h4>Draft acceptance criteria</h4>
+            <div class="ai-text ai-accept">A user sees a readable list of required documents before they start, with a way to confirm they have them. The freelancer case is covered, reusing the Sole Prop checklist if it fits.</div>
+            <h4>Why it matters</h4>
+            <div class="ai-text ai-why">Reach 35 to 45 a month, estimated lift +1.8 pp.</div>
+            <h4>Notes</h4>
+            <div class="ai-text ai-notes" data-placeholder="Add notes…"></div>
+          </div>
+        </div>
+
+        <div class="ai-card" id="ai-T6" data-task-id="T6" data-priority="P1" data-status="Not started">
+          <div class="ai-card-head">
+            <div class="ai-id">T6</div>
+            <div class="ai-title">Revamp or remove the Sole Prop / Freelancer question</div>
+            <span class="ai-pri-pill P1" contenteditable="false">P1</span>
+            <span class="ai-status-pill status-notstarted" contenteditable="false">Not started</span>
+          </div>
+          <div class="ai-meta">
+            <div class="ai-cell"><span class="ai-label">Stage</span><div class="ai-val ai-stage">Document upload.</div></div>
+            <div class="ai-cell"><span class="ai-label">Reach / mo</span><div class="ai-val ai-reach">33</div></div>
+            <div class="ai-cell"><span class="ai-label">Est. lift</span><div class="ai-val ai-lift">+1.0 pp</div></div>
+            <div class="ai-cell"><span class="ai-label">Confidence</span><div class="ai-val ai-conf">50%</div></div>
+          </div>
+          <div class="ai-links">
+            <div class="ai-cell"><span class="ai-label">Jira</span><div class="ai-val ai-jira" data-placeholder="Paste Jira link…"></div></div>
+            <div class="ai-cell"><span class="ai-label">PRD</span><div class="ai-val ai-prd" data-placeholder="Paste PRD link…"></div></div>
+            <div class="ai-cell"><span class="ai-label">Timeline</span><div class="ai-val ai-timeline" data-placeholder="e.g., May 26 – Jun 9"></div></div>
+            <div class="ai-cell"><span class="ai-label">Owner</span><div class="ai-val ai-owner" data-placeholder="Add owner…"></div></div>
+          </div>
+          <div class="ai-body">
+            <h4>Problem</h4>
+            <div class="ai-text ai-problem">The Sole Prop versus Freelancer question is a friction point. Some Freelancers and Sole Props could be exempted from it based on other signals.</div>
+            <h4>What is in scope</h4>
+            <div class="ai-text ai-scope">Check whether the question can be eliminated or revamped using the document checklist or other fields already collected. Add an in-product way to switch Sole Prop to Freelancer or the reverse, pending a discussion with compliance.</div>
+            <h4>Draft acceptance criteria</h4>
+            <div class="ai-text ai-accept">A defined set of Freelancers and Sole Props no longer see the question. Users can correct their type in product. Compliance has signed off on the exemption logic.</div>
+            <h4>Why it matters</h4>
+            <div class="ai-text ai-why">Reach 33 a month, estimated lift +1.0 pp. Carries a compliance dependency, so start that conversation early.</div>
+            <h4>Notes</h4>
+            <div class="ai-text ai-notes" data-placeholder="Add notes…"></div>
+          </div>
+        </div>
+
+        <div class="ai-card" id="ai-T7" data-task-id="T7" data-priority="P1" data-status="Not started">
+          <div class="ai-card-head">
+            <div class="ai-id">T7</div>
+            <div class="ai-title">DigiLocker fallback path</div>
+            <span class="ai-pri-pill P1" contenteditable="false">P1</span>
+            <span class="ai-status-pill status-notstarted" contenteditable="false">Not started</span>
+          </div>
+          <div class="ai-meta">
+            <div class="ai-cell"><span class="ai-label">Stage</span><div class="ai-val ai-stage">Aadhaar / DigiLocker (UBO_PAN_DETAILS). 23 stuck.</div></div>
+            <div class="ai-cell"><span class="ai-label">Reach / mo</span><div class="ai-val ai-reach">23</div></div>
+            <div class="ai-cell"><span class="ai-label">Est. lift</span><div class="ai-val ai-lift">+1.0 pp</div></div>
+            <div class="ai-cell"><span class="ai-label">Confidence</span><div class="ai-val ai-conf">70%</div></div>
+          </div>
+          <div class="ai-links">
+            <div class="ai-cell"><span class="ai-label">Jira</span><div class="ai-val ai-jira" data-placeholder="Paste Jira link…"></div></div>
+            <div class="ai-cell"><span class="ai-label">PRD</span><div class="ai-val ai-prd" data-placeholder="Paste PRD link…"></div></div>
+            <div class="ai-cell"><span class="ai-label">Timeline</span><div class="ai-val ai-timeline" data-placeholder="e.g., May 26 – Jun 9"></div></div>
+            <div class="ai-cell"><span class="ai-label">Owner</span><div class="ai-val ai-owner" data-placeholder="Add owner…"></div></div>
+          </div>
+          <div class="ai-body">
+            <h4>Problem</h4>
+            <div class="ai-text ai-problem">DigiLocker fails intermittently. It times out, the OTP does not arrive, or the Aadhaar is linked to an old mobile number. There is no fallback today, so users retry two or three times and drop off.</div>
+            <h4>What is in scope</h4>
+            <div class="ai-text ai-scope">Build an Aadhaar image upload fallback for DigiLocker failures, modelled on the existing OVD flow that already works.</div>
+            <h4>Draft acceptance criteria</h4>
+            <div class="ai-text ai-accept">When DigiLocker fails, the user is offered an Aadhaar image upload fallback and can complete this step without retrying DigiLocker indefinitely.</div>
+            <h4>Why it matters</h4>
+            <div class="ai-text ai-why">Reach 23 a month, estimated lift +1.0 pp.</div>
+            <h4>Notes</h4>
+            <div class="ai-text ai-notes" data-placeholder="Add notes…"></div>
+          </div>
+        </div>
+
+        <div class="ai-card" id="ai-T8" data-task-id="T8" data-priority="P2" data-status="Not started">
+          <div class="ai-card-head">
+            <div class="ai-id">T8</div>
+            <div class="ai-title">Registration-pending state</div>
+            <span class="ai-pri-pill P2" contenteditable="false">P2</span>
+            <span class="ai-status-pill status-notstarted" contenteditable="false">Not started</span>
+          </div>
+          <div class="ai-meta">
+            <div class="ai-cell"><span class="ai-label">Stage</span><div class="ai-val ai-stage">Document upload.</div></div>
+            <div class="ai-cell"><span class="ai-label">Reach / mo</span><div class="ai-val ai-reach">35-45</div></div>
+            <div class="ai-cell"><span class="ai-label">Est. lift</span><div class="ai-val ai-lift">+1.3 pp</div></div>
+            <div class="ai-cell"><span class="ai-label">Confidence</span><div class="ai-val ai-conf">50%</div></div>
+          </div>
+          <div class="ai-links">
+            <div class="ai-cell"><span class="ai-label">Jira</span><div class="ai-val ai-jira" data-placeholder="Paste Jira link…"></div></div>
+            <div class="ai-cell"><span class="ai-label">PRD</span><div class="ai-val ai-prd" data-placeholder="Paste PRD link…"></div></div>
+            <div class="ai-cell"><span class="ai-label">Timeline</span><div class="ai-val ai-timeline" data-placeholder="e.g., May 26 – Jun 9"></div></div>
+            <div class="ai-cell"><span class="ai-label">Owner</span><div class="ai-val ai-owner" data-placeholder="Add owner…"></div></div>
+          </div>
+          <div class="ai-body">
+            <h4>Problem</h4>
+            <div class="ai-text ai-problem">Roughly 20% of issues at the doc upload step are users with a pending dependency: Udyam pending, IEC under reactivation, GST name mismatch, or a current account not yet open. The funnel errors out with a generic message and sales mostly handles these through manual override. The split today is about 22 ICPs a month moving sales to first payment and 9 moving the other way.</div>
+            <h4>What is in scope</h4>
+            <div class="ai-text ai-scope">Capture the specific reason for the dependency (Udyam, IEC, GST, current account) and the expected timeline, set up automated off-product nudges, and give the user a one-click way to resume when ready.</div>
+            <h4>Draft acceptance criteria</h4>
+            <div class="ai-text ai-accept">A user with a pending dependency lands in a clear holding state instead of a generic error. The reason and expected timeline are captured. The user receives nudges and can resume in one click.</div>
+            <h4>Why it matters</h4>
+            <div class="ai-text ai-why">Reach 35 to 45 a month, estimated lift +1.3 pp.</div>
+            <h4>Notes</h4>
+            <div class="ai-text ai-notes" data-placeholder="Add notes…"></div>
+          </div>
+        </div>
+
+        <div class="ai-card" id="ai-T9" data-task-id="T9" data-priority="P2" data-status="Not started">
+          <div class="ai-card-head">
+            <div class="ai-id">T9</div>
+            <div class="ai-title">Awaiting-first-payment nudge</div>
+            <span class="ai-pri-pill P2" contenteditable="false">P2</span>
+            <span class="ai-status-pill status-notstarted" contenteditable="false">Not started</span>
+          </div>
+          <div class="ai-meta">
+            <div class="ai-cell"><span class="ai-label">Stage</span><div class="ai-val ai-stage">Sign-up and business details.</div></div>
+            <div class="ai-cell"><span class="ai-label">Reach / mo</span><div class="ai-val ai-reach">~60</div></div>
+            <div class="ai-cell"><span class="ai-label">Est. lift</span><div class="ai-val ai-lift">+0.8 pp</div></div>
+            <div class="ai-cell"><span class="ai-label">Confidence</span><div class="ai-val ai-conf">20%</div></div>
+          </div>
+          <div class="ai-links">
+            <div class="ai-cell"><span class="ai-label">Jira</span><div class="ai-val ai-jira" data-placeholder="Paste Jira link…"></div></div>
+            <div class="ai-cell"><span class="ai-label">PRD</span><div class="ai-val ai-prd" data-placeholder="Paste PRD link…"></div></div>
+            <div class="ai-cell"><span class="ai-label">Timeline</span><div class="ai-val ai-timeline" data-placeholder="e.g., May 26 – Jun 9"></div></div>
+            <div class="ai-cell"><span class="ai-label">Owner</span><div class="ai-val ai-owner" data-placeholder="Add owner…"></div></div>
+          </div>
+          <div class="ai-body">
+            <h4>Problem</h4>
+            <div class="ai-text ai-problem">Some users are at least a month away from their first international payment, and some were only exploring Skydo at relatively low intent. They drop off because there is no reason to finish now.</div>
+            <h4>What is in scope</h4>
+            <div class="ai-text ai-scope">Encourage users with a future payment to complete onboarding anyway, with the message that the account is ready and it is faster to onboard now even if the payment comes later.</div>
+            <h4>Draft acceptance criteria</h4>
+            <div class="ai-text ai-accept">Users who signal a future payment receive a nudge to complete onboarding now, framed around readiness and speed.</div>
+            <h4>Why it matters</h4>
+            <div class="ai-text ai-why">Reach about 60 a month but only 20% confidence on lift, estimated +0.8 pp. Treat this as a lower-certainty bet.</div>
+            <h4>Notes</h4>
+            <div class="ai-text ai-notes" data-placeholder="Add notes…"></div>
+          </div>
+        </div>
+
+        <div class="ai-card" id="ai-T10" data-task-id="T10" data-priority="P2" data-status="Not started">
+          <div class="ai-card-head">
+            <div class="ai-id">T10</div>
+            <div class="ai-title">IEC reactivation guide</div>
+            <span class="ai-pri-pill P2" contenteditable="false">P2</span>
+            <span class="ai-status-pill status-notstarted" contenteditable="false">Not started</span>
+          </div>
+          <div class="ai-meta">
+            <div class="ai-cell"><span class="ai-label">Stage</span><div class="ai-val ai-stage">Document upload.</div></div>
+            <div class="ai-cell"><span class="ai-label">Reach / mo</span><div class="ai-val ai-reach">10</div></div>
+            <div class="ai-cell"><span class="ai-label">Est. lift</span><div class="ai-val ai-lift">+0.5 pp</div></div>
+            <div class="ai-cell"><span class="ai-label">Confidence</span><div class="ai-val ai-conf">50%</div></div>
+          </div>
+          <div class="ai-links">
+            <div class="ai-cell"><span class="ai-label">Jira</span><div class="ai-val ai-jira" data-placeholder="Paste Jira link…"></div></div>
+            <div class="ai-cell"><span class="ai-label">PRD</span><div class="ai-val ai-prd" data-placeholder="Paste PRD link…"></div></div>
+            <div class="ai-cell"><span class="ai-label">Timeline</span><div class="ai-val ai-timeline" data-placeholder="e.g., May 26 – Jun 9"></div></div>
+            <div class="ai-cell"><span class="ai-label">Owner</span><div class="ai-val ai-owner" data-placeholder="Add owner…"></div></div>
+          </div>
+          <div class="ai-body">
+            <h4>Problem</h4>
+            <div class="ai-text ai-problem">A subset of the registration-pending users are blocked specifically because their IEC needs reactivation, and they do not know how to fix it.</div>
+            <h4>What is in scope</h4>
+            <div class="ai-text ai-scope">Provide a step-by-step guide on how to reactivate or apply for an IEC.</div>
+            <h4>Draft acceptance criteria</h4>
+            <div class="ai-text ai-accept">A user blocked on IEC sees a clear guide to reactivate or apply, in product.</div>
+            <h4>Why it matters</h4>
+            <div class="ai-text ai-why">Reach 10 a month, estimated lift +0.5 pp. Small and self-contained, good candidate to ship alongside T8.</div>
+            <h4>Notes</h4>
+            <div class="ai-text ai-notes" data-placeholder="Add notes…"></div>
+          </div>
+        </div>
+
+        <div class="ai-card" id="ai-T11" data-task-id="T11" data-priority="P3" data-status="Not started">
+          <div class="ai-card-head">
+            <div class="ai-id">T11</div>
+            <div class="ai-title">Contract / NDA trust signal</div>
+            <span class="ai-pri-pill P3" contenteditable="false">P3</span>
+            <span class="ai-status-pill status-notstarted" contenteditable="false">Not started</span>
+          </div>
+          <div class="ai-meta">
+            <div class="ai-cell"><span class="ai-label">Stage</span><div class="ai-val ai-stage">Document upload. Affects Freelancers.</div></div>
+            <div class="ai-cell"><span class="ai-label">Reach / mo</span><div class="ai-val ai-reach">8-10 FL</div></div>
+            <div class="ai-cell"><span class="ai-label">Est. lift</span><div class="ai-val ai-lift">+0.3 pp</div></div>
+            <div class="ai-cell"><span class="ai-label">Confidence</span><div class="ai-val ai-conf">50%</div></div>
+          </div>
+          <div class="ai-links">
+            <div class="ai-cell"><span class="ai-label">Jira</span><div class="ai-val ai-jira" data-placeholder="Paste Jira link…"></div></div>
+            <div class="ai-cell"><span class="ai-label">PRD</span><div class="ai-val ai-prd" data-placeholder="Paste PRD link…"></div></div>
+            <div class="ai-cell"><span class="ai-label">Timeline</span><div class="ai-val ai-timeline" data-placeholder="e.g., May 26 – Jun 9"></div></div>
+            <div class="ai-cell"><span class="ai-label">Owner</span><div class="ai-val ai-owner" data-placeholder="Add owner…"></div></div>
+          </div>
+          <div class="ai-body">
+            <h4>Problem</h4>
+            <div class="ai-text ai-problem">Freelancers hesitate to upload signed contracts because of NDA and confidentiality obligations. There is no explanation of what we store or why.</div>
+            <h4>What is in scope</h4>
+            <div class="ai-text ai-scope">Add a trust marker stating documents are not stored and are only used to verify proof of business. Add a contract masker so users can hide sensitive personal information before submitting.</div>
+            <h4>Draft acceptance criteria</h4>
+            <div class="ai-text ai-accept">At the contract upload point, the user sees a clear statement on storage and purpose. A masking option is available before submission.</div>
+            <h4>Why it matters</h4>
+            <div class="ai-text ai-why">Reach 8 to 10 Freelancers a month, estimated lift +0.3 pp.</div>
+            <h4>Notes</h4>
+            <div class="ai-text ai-notes" data-placeholder="Add notes…"></div>
+          </div>
+        </div>
+
+        <div class="ai-card" id="ai-T12" data-task-id="T12" data-priority="P3" data-status="Not started">
+          <div class="ai-card-head">
+            <div class="ai-id">T12</div>
+            <div class="ai-title">Pre-PAN trust section and savings calculator</div>
+            <span class="ai-pri-pill P3" contenteditable="false">P3</span>
+            <span class="ai-status-pill status-notstarted" contenteditable="false">Not started</span>
+          </div>
+          <div class="ai-meta">
+            <div class="ai-cell"><span class="ai-label">Stage</span><div class="ai-val ai-stage">Sign-up, before the PAN step.</div></div>
+            <div class="ai-cell"><span class="ai-label">Reach / mo</span><div class="ai-val ai-reach">20-22</div></div>
+            <div class="ai-cell"><span class="ai-label">Est. lift</span><div class="ai-val ai-lift">+0.3 pp</div></div>
+            <div class="ai-cell"><span class="ai-label">Confidence</span><div class="ai-val ai-conf">20%</div></div>
+          </div>
+          <div class="ai-links">
+            <div class="ai-cell"><span class="ai-label">Jira</span><div class="ai-val ai-jira" data-placeholder="Paste Jira link…"></div></div>
+            <div class="ai-cell"><span class="ai-label">PRD</span><div class="ai-val ai-prd" data-placeholder="Paste PRD link…"></div></div>
+            <div class="ai-cell"><span class="ai-label">Timeline</span><div class="ai-val ai-timeline" data-placeholder="e.g., May 26 – Jun 9"></div></div>
+            <div class="ai-cell"><span class="ai-label">Owner</span><div class="ai-val ai-owner" data-placeholder="Add owner…"></div></div>
+          </div>
+          <div class="ai-body">
+            <h4>Problem</h4>
+            <div class="ai-text ai-problem">Some users are low intent or unconvinced before they commit, similar to T3 and T9 but addressed with proof points rather than inline copy.</div>
+            <h4>What is in scope</h4>
+            <div class="ai-text ai-scope">Add a minimal trust section above the PAN step: RBI badge, customer count, other trust markers, and a specific testimonial. Add a savings calculator comparing Skydo's rate against a typical bank.</div>
+            <h4>Draft acceptance criteria</h4>
+            <div class="ai-text ai-accept">Above the PAN step, the user sees credible trust markers and can see an estimate of their savings versus a bank.</div>
+            <h4>Why it matters</h4>
+            <div class="ai-text ai-why">Reach 20 to 22 a month, 20% confidence, estimated lift +0.3 pp. Lowest certainty, keep it minimal.</div>
+            <h4>Notes</h4>
+            <div class="ai-text ai-notes" data-placeholder="Add notes…"></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="ai-open-threads">
+        <h2 class="ai-open-h">Open threads to resolve before specs</h2>
+        <div class="ai-text ai-open-body">
+          <p>These sit across several tasks and are worth closing early.</p>
+          <p>The Sole Prop / Freelancer question shows up in T4, T6, and T8. Decide whether it gets revamped or removed before specifying those three, since the answer changes all of them.</p>
+          <p>Compliance dependencies in T6 and T8 need to be cleared before design locks. Start those conversations in parallel with the P0 work.</p>
+        </div>
+      </div>
+
+    </div>
+
     <footer>
       Author — Atishay Jain
     </footer>
@@ -1852,7 +2473,13 @@
       '.ctx-method li',
       '.ctx-metric .m-name', '.ctx-metric .m-def',
       '.m-cur', '.m-tgt',
-      '.ctx-guardrail .g-text'
+      '.ctx-guardrail .g-text',
+      // Action items tab
+      '.ai-intro p', '.ai-summary-h', '.ai-row-title', '.ai-row-pri',
+      '.ai-row-stage', '.ai-row-reach', '.ai-row-lift', '.ai-row-conf',
+      '.ai-title', '.ai-val',
+      '.ai-problem', '.ai-scope', '.ai-accept', '.ai-why', '.ai-notes',
+      '.ai-open-h', '.ai-open-body p'
     ];
 
     function rebuildEdges() {
@@ -2429,6 +3056,33 @@
       { key: 'mCur',         sel: '.m-cur' },
       { key: 'mTgt',         sel: '.m-tgt' },
       { key: 'ctxGuardText', sel: '.ctx-guardrail .g-text' },
+      // Action items tab
+      { key: 'aiIntro',      sel: '.ai-intro p' },
+      { key: 'aiSummaryH',   sel: '.ai-summary-h' },
+      { key: 'aiRowTitle',   sel: '.ai-row-title' },
+      { key: 'aiRowPri',     sel: '.ai-row-pri' },
+      { key: 'aiRowStage',   sel: '.ai-row-stage' },
+      { key: 'aiRowReach',   sel: '.ai-row-reach' },
+      { key: 'aiRowLift',    sel: '.ai-row-lift' },
+      { key: 'aiRowConf',    sel: '.ai-row-conf' },
+      { key: 'aiCardTitle',  sel: '.ai-card .ai-title' },
+      { key: 'aiPriPill',    sel: '.ai-pri-pill' },
+      { key: 'aiStatusPill', sel: '.ai-status-pill' },
+      { key: 'aiStage',      sel: '.ai-stage' },
+      { key: 'aiReach',      sel: '.ai-reach' },
+      { key: 'aiLift',       sel: '.ai-lift' },
+      { key: 'aiConf',       sel: '.ai-conf' },
+      { key: 'aiJira',       sel: '.ai-jira' },
+      { key: 'aiPrd',        sel: '.ai-prd' },
+      { key: 'aiTimeline',   sel: '.ai-timeline' },
+      { key: 'aiOwner',      sel: '.ai-owner' },
+      { key: 'aiProblem',    sel: '.ai-problem' },
+      { key: 'aiScope',      sel: '.ai-scope' },
+      { key: 'aiAccept',     sel: '.ai-accept' },
+      { key: 'aiWhy',        sel: '.ai-why' },
+      { key: 'aiNotes',      sel: '.ai-notes' },
+      { key: 'aiOpenH',      sel: '.ai-open-h' },
+      { key: 'aiOpenBody',   sel: '.ai-open-body p' },
     ];
 
     function captureBaseline() {
@@ -2889,10 +3543,75 @@
       });
     });
 
+    // ===== Action Items: priority + status pill cycling =====
+    const AI_PRI_ORDER = ['P0', 'P1', 'P2', 'P3'];
+    const AI_STATUS_ORDER = ['Not started', 'In design', 'In dev', 'In testing', 'Shipped', 'Blocked'];
+    const aiStatusClass = (s) => 'status-' + s.toLowerCase().replace(/[^a-z]/g, '');
+
+    function applyAiPillClass(pill, value, classes) {
+      classes.forEach(c => pill.classList.remove(c));
+      const wantedClass = pill.classList.contains('ai-pri-pill') ? value : aiStatusClass(value);
+      pill.classList.add(wantedClass);
+      pill.textContent = value;
+    }
+    function refreshAiPillClasses() {
+      // Restore pill classes from current text (used after state restore, since persistence only saves innerHTML)
+      document.querySelectorAll('.ai-pri-pill').forEach(p => {
+        const txt = p.textContent.trim();
+        if (AI_PRI_ORDER.includes(txt)) {
+          AI_PRI_ORDER.forEach(c => p.classList.remove(c));
+          p.classList.add(txt);
+          const card = p.closest('.ai-card');
+          if (card) card.dataset.priority = txt;
+        }
+      });
+      document.querySelectorAll('.ai-status-pill').forEach(p => {
+        const txt = p.textContent.trim();
+        if (AI_STATUS_ORDER.includes(txt)) {
+          ['status-notstarted','status-indesign','status-indev','status-intesting','status-shipped','status-blocked']
+            .forEach(c => p.classList.remove(c));
+          p.classList.add(aiStatusClass(txt));
+          const card = p.closest('.ai-card');
+          if (card) card.dataset.status = txt;
+        }
+      });
+    }
+    document.querySelectorAll('.ai-pri-pill').forEach(pill => {
+      pill.addEventListener('click', (e) => {
+        if (!editMode) return;
+        e.stopPropagation();
+        const cur = pill.textContent.trim();
+        const next = AI_PRI_ORDER[(AI_PRI_ORDER.indexOf(cur) + 1) % AI_PRI_ORDER.length];
+        AI_PRI_ORDER.forEach(c => pill.classList.remove(c));
+        pill.classList.add(next);
+        pill.textContent = next;
+        const card = pill.closest('.ai-card');
+        if (card) card.dataset.priority = next;
+        persistState();
+      });
+    });
+    document.querySelectorAll('.ai-status-pill').forEach(pill => {
+      pill.addEventListener('click', (e) => {
+        if (!editMode) return;
+        e.stopPropagation();
+        const cur = pill.textContent.trim();
+        const next = AI_STATUS_ORDER[(AI_STATUS_ORDER.indexOf(cur) + 1) % AI_STATUS_ORDER.length];
+        ['status-notstarted','status-indesign','status-indev','status-intesting','status-shipped','status-blocked']
+          .forEach(c => pill.classList.remove(c));
+        pill.classList.add(aiStatusClass(next));
+        pill.textContent = next;
+        const card = pill.closest('.ai-card');
+        if (card) card.dataset.status = next;
+        persistState();
+      });
+    });
+
     // Capture file baseline BEFORE applying any saved user edits
     captureBaseline();
     // Apply saved edits (as diffs vs baseline)
     restoreState();
+    // Sync pill CSS classes with restored text content
+    refreshAiPillClasses();
     applyFilter();
     setTimeout(drawLines, 60);
   </script>
